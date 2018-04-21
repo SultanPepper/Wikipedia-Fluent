@@ -13,16 +13,24 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Wikipedia_Fluent.Models;
+using System.Text.RegularExpressions;
+using System.Text;
+using Windows.UI.Xaml.Documents;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Wikipedia_Fluent
 {
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class ContentPage : Page
     {
+
+        string headers_AsString;
+        StringBuilder header_sb = new StringBuilder();
+
         public ContentPage()
         {
             this.InitializeComponent();
@@ -30,10 +38,25 @@ namespace Wikipedia_Fluent
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            WikiPageContentsToPass PassedThruPage = (WikiPageContentsToPass)e.Parameter;
 
-            pageTitle.Text = PassedThruPage.PageTitle;
-            pageContent.Text = PassedThruPage.PageContent;
+            WikiPageContentsToPass wikiContent = (WikiPageContentsToPass)e.Parameter;
+
+            //string headers = ParseWikiText.GetHeaders(PassedThruPage.PageContent);
+
+
+
+
+
+
+
+            string nl = Environment.NewLine;
+            string div = "======================" + Environment.NewLine;
+
+
+            pageTitle.Text = wikiContent.PageTitle;
+            pageContent.Text = wikiContent.PageContent;   
+
+
 
             //pageTitle.Text = parametersPassed.PageTitle;
             //pageContent.Text = parametersPassed;

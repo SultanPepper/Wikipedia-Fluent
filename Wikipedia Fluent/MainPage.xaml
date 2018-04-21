@@ -6,62 +6,200 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:Wikipedia_Fluent.Models"
+    xmlns:models="using:Wikipedia_Fluent.Models"
     mc:Ignorable="d">
-    
-    <Page.Resources>
-        <Style TargetType="Button"
-               x:Key="splitViewPane">
-            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="Width" Value="75"/>
-            <Setter Property="Height" Value="75"/>
-            <Setter Property="Background" Value="Transparent"/>
-        </Style>
-    </Page.Resources>
 
- 
-    
+    <Page.DataContext>
+        <models:DataBinding />
+    </Page.DataContext>
+
+    <!--Had to build project before it recognized-->
+
+
+
     <Grid RequestedTheme="Light" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="VisualStateGroup">
+    
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+
+        <SplitView Name="mySplitView" 
+                   CompactPaneLength="70" 
+                   OpenPaneLength="275" 
+                   DisplayMode="CompactInline" 
+                   PaneBackground="{ThemeResource SystemControlAccentDark2AcrylicWindowAccentDark2MediumHighBrush}"
+                   Grid.RowSpan="2"
+                   PaneOpening="mySplitView_PaneIsOpening"
+                   PaneClosing="mySplitView_PaneIsClosing">
+
+            <SplitView.Pane>
+                <RelativePanel Name="splitviewPane" Margin="0,0,0,0">
+                    <Button Name="hamburgerbtn"
+                        RelativePanel.AlignTopWithPanel="True"
+                        Style="{ThemeResource ButtonRevealStyle}"
+                        FontFamily="Segoe MDL2 Assets"             
+                        Click="hamburgerbtn_Click"
+                        Background="Transparent"
+                        Foreground="GhostWhite"
+                        FontWeight="Normal"
+                        FontSize="34"
+                        Width="70"
+                        Height="70"
+                        
+                        Content="&#xE700;"/>
+                    
+                    <Button x:Name="homebtn"
+                        RelativePanel.Below="hamburgerbtn"
+                        Style="{ThemeResource ButtonRevealStyle}"
+                        FontFamily="Segoe MDL2 Assets"
+                        Click="homebtn_Click"
+                        Background="Transparent"
+                        Foreground="GhostWhite"
+                        FontWeight="Normal"
+                        FontSize="34"                            
+                        Width="70"
+                        Height="70"
+                        Content="&#xE80F;"/>
+
+                    <Button Name="settingsbtn"
+                        Margin="0,0,0,0"
+                        RelativePanel.AlignBottomWithPanel="True"
+                        Style="{ThemeResource ButtonRevealStyle}"
+                        FontFamily="Segoe MDL2 Assets"
+                        Click="settingbtn_Click"
+                        Background="Transparent"
+                        Foreground="GhostWhite"
+                        FontWeight="Normal"
+                        FontSize="34" 
+                        Width="70"
+                        Height="70"
+                        VerticalAlignment="Bottom"
+                        Content="&#xE713;"/>
+                    
+                </RelativePanel>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <RelativePanel>
+                    <Button Name="backbtn"
+                            Content="&#xE112;"
+                            RelativePanel.AlignLeftWithPanel="True"
+                            Style="{ThemeResource ButtonRevealStyle}"
+                            Click="backbtn_Click"
+                            FontFamily="Segoe MDL2 Assets"
+                            FontSize="34"
+                            Foreground="Black"
+                            Width="150"
+                            Height="75"
+                            MinWidth="60"
+                            Background="Transparent"
+                            Margin="5,0,5,0"/>
+                    <Button Name="forwardbtn"
+                            Content="&#xE111;"
+                            RelativePanel.AlignRightWithPanel="True"
+                            Style="{ThemeResource ButtonRevealStyle}"
+                            Click="forwardbtn_Click"
+                            FontFamily="Segoe MDL2 Assets"
+                            FontSize="34"
+                            Foreground="Black"
+                            Width="150"
+                            Height="75"
+                            MinWidth="60"
+                            Background="Transparent"
+                            Margin="5,0,5,0"/>
+
+                    <!--
+                    <TextBlock Name="PageTitle_Textblock"
+                               Text="{Binding PageTitleText}"  
+                               FocusVisualSecondaryBrush="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}"
+                               FontFamily="{ThemeResource PivotHeaderItemFontFamily}"
+                               FontSize="34"
+                               Width="150"
+                               Height="75"
+                               Foreground="Black"
+                               Visibility="Visible"
+                               HorizontalTextAlignment="Center"
+                               RelativePanel.AlignHorizontalCenterWithPanel="True"
+                               RelativePanel.AlignVerticalCenterWith="backbtn"
+                               Margin="5,3,5,0"/>
+                    -->
+
+
+
+                    <Button x:Name="splitviewtogglebtn"
+                            Content="&#xE700;"
+                            Click="splitviewtogglebtn_Click"
+                            FocusVisualSecondaryBrush="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}"                           
+                            FontFamily="Segoe MDL2 Assets"
+                            FontSize="34"
+                            Width="150"
+                            Height="75"
+                            MinWidth="60"
+                            Foreground="Black"
+                            Background="White"
+                            Visibility="Collapsed"
+                            RelativePanel.AlignHorizontalCenterWithPanel="True"
+                            RelativePanel.AlignVerticalCenterWith="backbtn"
+                            Style="{ThemeResource ButtonRevealStyle}"/>
+                    
+                    <Frame Name="ContentFrame"
+                           RelativePanel.Below="backbtn"
+                           RelativePanel.AlignLeftWithPanel="True"
+                           RelativePanel.AlignRightWithPanel="True"
+                           RelativePanel.AlignBottomWithPanel="True"
+                           Margin="2,0,2,2">
+                    </Frame>
+                </RelativePanel>
+            </SplitView.Content>
+        </SplitView>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup_MainPage">
                 <VisualState x:Name="Layout_1">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="150"/>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!-- Replace hamburger menu-->
+                        <!--Replace hamburger menu-->
                         <Setter Target="splitviewtogglebtn.Visibility" Value="Visible"/>
                         <Setter Target="splitviewtogglebtn.Width" Value="100"/>
-                        <Setter Target="splitviewtogglebtn.Height" Value="40"/>
-                        <Setter Target="splitviewtogglebtn.Margin" Value="5,5,5,5,5"/>
-                        <!-- Hamburger Button-->
-                        <Setter Target="hamburgerbtn.Width" Value="40"/>
-                        <Setter Target="hamburgerbtn.Height" Value="40"/>
-                        <Setter Target="hamburgerbtn.FontSize" Value="24"/>
-                        <!-- Settings Button -->
-                        <Setter Target="settingsbtn.Width" Value="40"/>
-                        <Setter Target="settingsbtn.Height" Value="30"/>
-                        <Setter Target="settingsbtn.FontSize" Value="24"/>
-
-                        <!-- Back Button -->
+                        <Setter Target="splitviewtogglebtn.Height" Value="60"/>
+                        <Setter Target="splitviewtogglebtn.FontSize" Value="25"/>
+                        <Setter Target="splitviewtogglebtn.Margin" Value="10,0,10,0"/>
+                        <!--Hamburger Button-->
+                        <Setter Target="hamburgerbtn.Width" Value="60"/>
+                        <Setter Target="hamburgerbtn.Height" Value="60"/>
+                        <Setter Target="hamburgerbtn.FontSize" Value="25"/>
+                        <!--Home Button-->
+                        <Setter Target="homebtn.Width" Value="60"/>
+                        <Setter Target="homebtn.Height" Value="60"/>
+                        <Setter Target="homebtn.FontSize" Value="25"/>
+                        <!--Settings Button-->
+                        <Setter Target="settingsbtn.Width" Value="60"/>
+                        <Setter Target="settingsbtn.Height" Value="60"/>
+                        <Setter Target="settingsbtn.FontSize" Value="25"/>
+                        <!--Page Title
+                        <Setter Target="PageTitle.Visibility" Value="Collapsed"/>-->
+                        <!--Back Button-->
                         <Setter Target="backbtn.Width" Value="100"/>
-                        <Setter Target="backbtn.Height" Value="40"/>
-                        <Setter Target="backbtn.FontSize" Value="30"/>
-                        <Setter Target="backbtn.Margin" Value="5,5,5,5"/>
-                        <!-- Forward button -->
+                        <Setter Target="backbtn.Height" Value="60"/>
+                        <Setter Target="backbtn.FontSize" Value="25"/>
+                        <Setter Target="backbtn.Margin" Value="0,0,5,0"/>
+                        <!--Forward button-->
                         <Setter Target="forwardbtn.Width" Value="100"/>
-                        <Setter Target="forwardbtn.Height" Value="30"/>
-                        <Setter Target="forwardbtn.FontSize" Value="30"/>
-                        <Setter Target="forwardbtn.Margin" Value="5,5,5,5"/>
-                        <!-- Split -->
+                        <Setter Target="forwardbtn.Height" Value="60"/>
+                        <Setter Target="forwardbtn.FontSize" Value="25"/>
+                        <Setter Target="forwardbtn.Margin" Value="5,0,0,0"/>
+                        <!--Split-->
                         <Setter Target="mySplitView.CompactPaneLength" Value="0"/>
                         <Setter Target="mySplitView.DisplayMode" Value="Overlay"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Layout_2">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="700"/>
+                        <AdaptiveTrigger MinWindowWidth="800"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <!-- Replace hamburger menu-->
@@ -69,21 +207,31 @@
                         <!-- Hamburger Button-->
                         <Setter Target="hamburgerbtn.Width" Value="60"/>
                         <Setter Target="hamburgerbtn.Height" Value="60"/>
-                        <Setter Target="hamburgerbtn.FontSize" Value="30"/>
+                        <Setter Target="hamburgerbtn.FontSize" Value="28"/>
+                        <!--Home Button-->
+                        <Setter Target="homebtn.Width" Value="60"/>
+                        <Setter Target="homebtn.Height" Value="60"/>
+                        <Setter Target="homebtn.FontSize" Value="28"/>
                         <!-- Settings Button -->
                         <Setter Target="settingsbtn.Width" Value="60"/>
                         <Setter Target="settingsbtn.Height" Value="60"/>
-                        <Setter Target="settingsbtn.FontSize" Value="30"/>
+                        <Setter Target="settingsbtn.FontSize" Value="28"/>
+                        <!--Page Title
+                        <Setter Target="PageTitle.Visibility" Value="Visible"/>
+                        <Setter Target="PageTitle.Width" Value="120"/>
+                        <Setter Target="PageTitle.Height" Value="60"/>
+                        <Setter Target="PageTitle.FontSize" Value="28"/>
+                        <Setter Target="PageTitle.Margin" Value="5,0,5,0"/>-->
                         <!-- Back Button -->
                         <Setter Target="backbtn.Width" Value="120"/>
                         <Setter Target="backbtn.Height" Value="60"/>
-                        <Setter Target="backbtn.FontSize" Value="30"/>
-                        <Setter Target="backbtn.Margin" Value="5,5,5,5"/>
+                        <Setter Target="backbtn.FontSize" Value="28"/>
+                        <Setter Target="backbtn.Margin" Value="0,0,5,5"/>
                         <!-- Forward button -->
                         <Setter Target="forwardbtn.Width" Value="120"/>
                         <Setter Target="forwardbtn.Height" Value="60"/>
-                        <Setter Target="forwardbtn.FontSize" Value="30"/>
-                        <Setter Target="forwardbtn.Margin" Value="5,5,5,5"/>
+                        <Setter Target="forwardbtn.FontSize" Value="28"/>
+                        <Setter Target="forwardbtn.Margin" Value="5,0,0,5"/>
                         <!-- Pane -->
                         <Setter Target="mySplitView.CompactPaneLength" Value="60"/>
                         <Setter Target="mySplitView.DisplayMode" Value="CompactInline"/>
@@ -100,20 +248,30 @@
                         <Setter Target="hamburgerbtn.Width" Value="70"/>
                         <Setter Target="hamburgerbtn.Height" Value="70"/>
                         <Setter Target="hamburgerbtn.FontSize" Value="28"/>
+                        <!--Home Button-->
+                        <Setter Target="homebtn.Width" Value="70"/>
+                        <Setter Target="homebtn.Height" Value="70"/>
+                        <Setter Target="homebtn.FontSize" Value="28"/>
                         <!-- Settings Button -->
                         <Setter Target="settingsbtn.Width" Value="70"/>
                         <Setter Target="settingsbtn.Height" Value="70"/>
-                        <Setter Target="settingsbtn.FontSize" Value="28"/>
+                        <!--Page Title
+                        <Setter Target="PageTitle.Visibility" Value="Visible"/>
+                        <Setter Target="PageTitle.Width" Value="140"/>
+                        <Setter Target="PageTitle.Height" Value="70"/>
+                        <Setter Target="PageTitle.FontSize" Value="28"/>
+                        <Setter Target="PageTitle.Margin" Value="5,0,5,0"/>
+                        <Setter Target="settingsbtn.FontSize" Value="28"/>-->
                         <!-- Back Button -->
-                        <Setter Target="backbtn.Width" Value="120"/>
-                        <Setter Target="backbtn.Height" Value="60"/>
+                        <Setter Target="backbtn.Width" Value="140"/>
+                        <Setter Target="backbtn.Height" Value="70"/>
                         <Setter Target="backbtn.FontSize" Value="28"/>
-                        <Setter Target="backbtn.Margin" Value="5,5,5,5"/>
+                        <Setter Target="backbtn.Margin" Value="0,0,5,5"/>
                         <!-- Forward button -->
-                        <Setter Target="forwardbtn.Width" Value="120"/>
-                        <Setter Target="forwardbtn.Height" Value="60"/>
+                        <Setter Target="forwardbtn.Width" Value="140"/>
+                        <Setter Target="forwardbtn.Height" Value="70"/>
                         <Setter Target="forwardbtn.FontSize" Value="28"/>
-                        <Setter Target="forwardbtn.Margin" Value="5,5,5,5"/>
+                        <Setter Target="forwardbtn.Margin" Value="5,0,0,5"/>
                         <!-- Pane -->
                         <Setter Target="mySplitView.CompactPaneLength" Value="70"/>
                         <Setter Target="mySplitView.DisplayMode" Value="CompactInline"/>
@@ -129,21 +287,31 @@
                         <!-- Hamburger Button-->
                         <Setter Target="hamburgerbtn.Width" Value="70"/>
                         <Setter Target="hamburgerbtn.Height" Value="70"/>
-                        <Setter Target="hamburgerbtn.FontSize" Value="28"/>
+                        <Setter Target="hamburgerbtn.FontSize" Value="30"/>
+                        <!--Home Button-->
+                        <Setter Target="homebtn.Width" Value="70"/>
+                        <Setter Target="homebtn.Height" Value="70"/>
+                        <Setter Target="homebtn.FontSize" Value="30"/>
                         <!-- Settings Button -->
                         <Setter Target="settingsbtn.Width" Value="70"/>
                         <Setter Target="settingsbtn.Height" Value="70"/>
-                        <Setter Target="settingsbtn.FontSize" Value="28"/>
+                        <Setter Target="settingsbtn.FontSize" Value="30"/>
+                        <!--Page Title
+                        <Setter Target="PageTitle.Visibility" Value="Visible"/>
+                        <Setter Target="PageTitle.Width" Value="140"/>
+                        <Setter Target="PageTitle.Height" Value="70"/>
+                        <Setter Target="PageTitle.FontSize" Value="30"/>
+                        <Setter Target="PageTitle.Margin" Value="5,0,5,0"/>-->
                         <!-- Back Button -->
-                        <Setter Target="backbtn.Width" Value="120"/>
-                        <Setter Target="backbtn.Height" Value="60"/>
-                        <Setter Target="backbtn.FontSize" Value="28"/>
-                        <Setter Target="backbtn.Margin" Value="0,0,0,0"/>
+                        <Setter Target="backbtn.Width" Value="140"/>
+                        <Setter Target="backbtn.Height" Value="70"/>
+                        <Setter Target="backbtn.FontSize" Value="30"/>
+                        <Setter Target="backbtn.Margin" Value="0,0,5,5"/>
                         <!-- Forward button -->
-                        <Setter Target="forwardbtn.Width" Value="120"/>
-                        <Setter Target="forwardbtn.Height" Value="60"/>
-                        <Setter Target="forwardbtn.FontSize" Value="28"/>
-                        <Setter Target="forwardbtn.Margin" Value="0,0,0,0"/>
+                        <Setter Target="forwardbtn.Width" Value="140"/>
+                        <Setter Target="forwardbtn.Height" Value="70"/>
+                        <Setter Target="forwardbtn.FontSize" Value="30"/>
+                        <Setter Target="forwardbtn.Margin" Value="5,0,0,5"/>
                         <!-- Pane lengths-->
                         <Setter Target="mySplitView.CompactPaneLength" Value="70"/>
                         <Setter Target="mySplitView.DisplayMode" Value="CompactInline"/>
@@ -152,109 +320,6 @@
 
                 </VisualState>
             </VisualStateGroup>
-       </VisualStateManager.VisualStateGroups>
-        
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-
-        <SplitView Name="mySplitView" 
-                   IsPaneOpen="False" 
-                   CompactPaneLength="40" 
-                   OpenPaneLength="275" 
-                   DisplayMode="CompactInline" 
-                   PaneBackground="{ThemeResource SystemControlAccentDark2AcrylicWindowAccentDark2MediumHighBrush}"
-                   Grid.RowSpan="2"
-                   Visibility="Visible">
-
-            <SplitView.Pane>
-                <RelativePanel Name="splitviewPane" Margin="0,0,0,0">
-                    <Button Name="hamburgerbtn"
-                        RelativePanel.AlignTopWithPanel="True"
-                        Style="{StaticResource ButtonRevealStyle}"
-                        FocusVisualSecondaryBrush="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}"
-                        Click="hamburgerbtn_Click"
-                        FontFamily="Segoe MDL2 Assets"
-                        FontSize="24"
-                        FontWeight="Bold"
-                        Foreground="White"
-                        Background="Transparent"
-                        Width="40"
-                        Height="40"
-                        Content="&#xE700;"/>
-
-
-                    <Button Name="settingsbtn"
-                        Margin="0,0,0,0"
-                        RelativePanel.AlignBottomWithPanel="True"
-                        Style="{StaticResource ButtonRevealStyle}"
-                        FocusVisualSecondaryBrush="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}"
-                        Click="settingbtn_Click"
-                        FontFamily="Segoe MDL2 Assets"
-                        FontSize="24"
-                        Foreground="White"
-                        Background="Transparent"
-                        Width="40"
-                        Height="40"
-                        VerticalAlignment="Bottom"
-                        Content="&#xE713;"/>
-                </RelativePanel>
-            </SplitView.Pane>
-            <SplitView.Content>
-                <RelativePanel>
-                    <Button Name="backbtn"
-                            Content="&#xE112;"
-                            RelativePanel.AlignLeftWithPanel="True"
-                            Style="{StaticResource ButtonRevealStyle}"
-                            Click="backbtn_Click"
-                            FontFamily="Segoe MDL2 Assets"
-                            FontSize="34"
-                            Foreground="Black"
-                            Width="150"
-                            Height="75"
-                            MinWidth="60"
-                            Background="Transparent"
-                            Margin="0,0,0,0"/>
-
-                    <Button Name="forwardbtn"
-                            Content="&#xE111;"
-                            RelativePanel.AlignRightWithPanel="True"
-                            Style="{StaticResource ButtonRevealStyle}"
-                            Click="forwardbtn_Click"
-                            FontFamily="Segoe MDL2 Assets"
-                            FontSize="34"
-                            Foreground="Black"
-                            Width="150"
-                            Height="75"
-                            MinWidth="60"
-                            Background="Transparent"
-                            Margin="0,0,0,0"/>
-
-                    <Button x:Name="splitviewtogglebtn"
-                            Content="&#xE700;"
-                            Click="splitviewtogglebtn_Click"
-                            FocusVisualSecondaryBrush="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}"                           
-                            FontFamily="Segoe MDL2 Assets"
-                            FontSize="44"
-                            FontWeight="Bold"
-                            Foreground="Black"
-                            Background="White"
-                            Visibility="Collapsed"
-                            RelativePanel.AlignHorizontalCenterWithPanel="True"
-                            RelativePanel.AlignVerticalCenterWith="backbtn"
-                            Style="{StaticResource ButtonRevealStyle}" />
-
-                    <Frame Name="ContentFrame"
-                           RelativePanel.Below="backbtn"
-                           RelativePanel.AlignLeftWithPanel="True"
-                           RelativePanel.AlignRightWithPanel="True"
-                           RelativePanel.AlignBottomWithPanel="True"
-                           Margin="5,5,5,5">
-                    </Frame>
-                </RelativePanel>
-            </SplitView.Content>
-        </SplitView>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>

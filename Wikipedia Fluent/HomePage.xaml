@@ -5,134 +5,11 @@
     xmlns:local="using:Wikipedia_Fluent"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:Wikipedia_Fluent.Models"
     mc:Ignorable="d">
-
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="VisualStateGroup">
-                <VisualState x:Name="Layout_1">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <!-- Query textbox-->
-                        <Setter Target="searchQuery.FontSize" Value="18"/>
-                        <Setter Target="searchQuery.Margin" Value="5,15,15,5"/>
-                        <!-- Submit button-->
-                        <Setter Target="submitbtn.FontSize" Value="20"/>
-                        <Setter Target="submitbtn.Margin" Value="8,8,8,8"/>
-                        <!-- Stack Panel-->
-                        <Setter Target="StackPanelGrid.Grid.Row" Value="3"/>
-                        <Setter Target="StackPanelGrid.Grid.RowSpan" Value="3"/>
-                        <Setter Target="StackPanelGrid.Grid.Column" Value="0"/>
-                        <Setter Target="StackPanelGrid.Grid.ColumnSpan" Value="5"/>
-                        <Setter Target="searchQuery.PlaceholderText" Value="Tiny"/>
-                        <!-- Wikipedia Logo-->
-                        <Setter Target="WikiLogo.Visibility" Value="Visible"/>
-                        <Setter Target="ImageGrid.Grid.Row" Value="0"/>
-                        <Setter Target="ImageGrid.Grid.RowSpan" Value="3"/>
-                        <Setter Target="ImageGrid.Grid.Column" Value="0"/>
-                        <Setter Target="ImageGrid.Grid.ColumnSpan" Value="5"/>
-                        <Setter Target="WikiLogo.Margin" Value="0,0,0,0"/>
-                        <Setter Target="WikiLogo.Stretch" Value="Uniform"/>
-                        <!--Progress Ring -->
-                        <Setter Target="progressRing.Width" Value="60"/>
-                        <Setter Target="progressRing.Height" Value="60"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Layout_2">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="700"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <!-- Query button/toggle-->
-                        <Setter Target="searchQuery.FontSize" Value="20"/>
-                        <Setter Target="searchQuery.Margin" Value="10,20,10,20"/>
-                        <!-- Submit button-->
-                        <Setter Target="submitbtn.FontSize" Value="22"/>
-                        <Setter Target="submitbtn.Margin" Value="5,5,5,5"/>
-                        <!-- Stack Panel-->
-                        <Setter Target="StackPanelGrid.Grid.Row" Value="4"/>
-                        <Setter Target="StackPanelGrid.Grid.RowSpan" Value="2"/>
-                        <Setter Target="StackPanelGrid.Grid.Column" Value="1"/>
-                        <Setter Target="StackPanelGrid.Grid.ColumnSpan" Value="3"/>
-                        <Setter Target="searchQuery.PlaceholderText" Value="Small"/>
-                        <!-- Wikipedia Logo-->
-                        <Setter Target="WikiLogo.Visibility" Value="Visible"/>
-                        <Setter Target="ImageGrid.Grid.Row" Value="0"/>
-                        <Setter Target="ImageGrid.Grid.RowSpan" Value="4"/>
-                        <Setter Target="ImageGrid.Grid.Column" Value="1"/>
-                        <Setter Target="ImageGrid.Grid.ColumnSpan" Value="3"/>
-                        <Setter Target="WikiLogo.Margin" Value="10,10,10,10"/>
-                        <Setter Target="WikiLogo.Stretch" Value="Uniform"/>
-                        <!--Progress Ring -->
-                        <Setter Target="progressRing.Width" Value="90"/>
-                        <Setter Target="progressRing.Height" Value="90"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Layout_3">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1400"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <!-- Query button/toggle-->
-                        <Setter Target="searchQuery.FontSize" Value="26"/>
-                        <Setter Target="searchQuery.Margin" Value="10,20,10,20"/>
-                        <!-- Submit button-->
-                        <Setter Target="submitbtn.FontSize" Value="28"/>
-                        <Setter Target="submitbtn.Margin" Value="5,5,5,5"/>
-                        <!-- Stack Panel-->
-                        <Setter Target="StackPanelGrid.Grid.Row" Value="4"/>
-                        <Setter Target="StackPanelGrid.Grid.RowSpan" Value="2"/>
-                        <Setter Target="StackPanelGrid.Grid.Column" Value="1"/>
-                        <Setter Target="StackPanelGrid.Grid.ColumnSpan" Value="3"/>
-                        <Setter Target="searchQuery.PlaceholderText" Value="Medium"/>
-                        <!-- Wikipedia Logo-->
-                        <Setter Target="WikiLogo.Visibility" Value="Visible"/>
-                        <Setter Target="ImageGrid.Grid.Row" Value="0"/>
-                        <Setter Target="ImageGrid.Grid.RowSpan" Value="4"/>
-                        <Setter Target="ImageGrid.Grid.Column" Value="1"/>
-                        <Setter Target="ImageGrid.Grid.ColumnSpan" Value="3"/>
-                        <Setter Target="WikiLogo.Margin" Value="10,10,10,10"/>
-                        <Setter Target="WikiLogo.Stretch" Value="Uniform"/>
-                        <!--Progress Ring -->
-                        <Setter Target="progressRing.Width" Value="100"/>
-                        <Setter Target="progressRing.Height" Value="100"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Layout_4">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1800"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <!-- Query button/toggle-->
-                        <Setter Target="searchQuery.FontSize" Value="28"/>
-                        <Setter Target="searchQuery.Margin" Value="10,20,10,20"/>
-                        <!-- Submit button-->
-                        <Setter Target="submitbtn.FontSize" Value="28"/>
-                        <Setter Target="submitbtn.Margin" Value="5,5,5,5"/>
-                        <!-- Stack Panel-->
-                        <Setter Target="StackPanelGrid.Grid.Row" Value="4"/>
-                        <Setter Target="StackPanelGrid.Grid.RowSpan" Value="4"/>
-                        <Setter Target="StackPanelGrid.Grid.Column" Value="1"/>
-                        <Setter Target="StackPanelGrid.Grid.ColumnSpan" Value="3"/>
-                        <Setter Target="searchQuery.PlaceholderText" Value="Large"/>
-                        <!-- Wikipedia Logo-->
-                        <Setter Target="WikiLogo.Visibility" Value="Visible"/>
-                        <Setter Target="ImageGrid.Grid.Row" Value="0"/>
-                        <Setter Target="ImageGrid.Grid.RowSpan" Value="3"/>
-                        <Setter Target="ImageGrid.Grid.Column" Value="0"/>
-                        <Setter Target="ImageGrid.Grid.ColumnSpan" Value="5"/>
-                        <Setter Target="WikiLogo.Margin" Value="15,15,15,15"/>
-                        <Setter Target="WikiLogo.Stretch" Value="Uniform"/>
-                        <!--Progress Ring -->
-                        <Setter Target="progressRing.Width" Value="125"/>
-                        <Setter Target="progressRing.Height" Value="125"/>
-                    </VisualState.Setters>
 
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+ 
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
@@ -157,35 +34,38 @@
                Source="Assets/wikipedia_logo.jpg"/>
         </Grid>
 
+        
         <Grid x:Name="StackPanelGrid" Grid.Row="4" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="3">
-        <StackPanel Name="myStackPanel">
-            
-        <TextBox Name="searchQuery"
+            <StackPanel Name="myStackPanel">
+                
+                <AutoSuggestBox Name="searchQuery"
                 PlaceholderText="What are you searching for?"
                 FontSize="24"
-                MaxWidth="1400"
+                MaxWidth="550"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Top"
+                VerticalAlignment="Top"                    
+                KeyDown="searchQuery_KeyDown"                           
                 Margin="10,20,10,20"/>
-
-        <Button Name="submitbtn"
+                
+                
+                <Button Name="submitbtn"
                 Click="submitbtn_Click"
-                Style="{StaticResource ButtonRevealStyle}"
+                Style="{ThemeResource ButtonRevealStyle}"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                MaxWidth="300"
-                MaxHeight="150"
+                Width="120"
+                MaxWidth="250"
+                MaxHeight="200"
                 Content="Submit"
                 FontSize="28"
                 BorderThickness="2"
-                BorderBrush="{StaticResource ButtonBorderThemeBrush}"
-                Background="{StaticResource SystemControlAccentDark2AcrylicWindowAccentDark2MediumHighBrush}"
-                RevealBrush.State="PointerOver"
+                BorderBrush="{ThemeResource ButtonBorderThemeBrush}"
+                Background="{ThemeResource SystemControlAccentDark2AcrylicWindowAccentDark2MediumHighBrush}"
                 Foreground="White"
                 Margin="5,5,5,5" 
                 FocusVisualSecondaryBrush="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}"/>
-
-        <ProgressRing Name="progressRing"
+                
+                <ProgressRing Name="progressRing"
                       IsActive="False"
                       Grid.Row="5"
                       Grid.RowSpan="1"
@@ -196,10 +76,144 @@
                       Foreground="{ThemeResource SystemControlAccentDark2AcrylicWindowAccentDark2MediumHighBrush}"
                       Margin="10,10,10,10"
                       />
-
-        </StackPanel>
+            </StackPanel>
         </Grid>
 
-
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup_HomePage">
+                <VisualState x:Name="Layout_1">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!-- Query textbox-->
+                        <Setter Target="searchQuery.FontSize" Value="24"/>
+                        <Setter Target="searchQuery.Margin" Value="40,25,40,10"/>
+                        <Setter Target="searchQuery.MaxWidth" Value="480"/>
+                        <!-- Submit button-->
+                        <Setter Target="submitbtn.FontSize" Value="18"/>
+                        <Setter Target="submitbtn.Margin" Value="25,15,25,25"/>
+                        <Setter Target="submitbtn.Height" Value="45"/>
+                        <Setter Target="submitbtn.Width" Value="120"/>
+                        <!-- Stack Panel-->
+                        <Setter Target="StackPanelGrid.Grid.Row" Value="4"/>
+                        <Setter Target="StackPanelGrid.Grid.RowSpan" Value="2"/>
+                        <Setter Target="StackPanelGrid.Grid.Column" Value="0"/>
+                        <Setter Target="StackPanelGrid.Grid.ColumnSpan" Value="5"/>
+                        <!--<Setter Target="searchQuery.PlaceholderText" Value="Tiny"/>-->
+                        <!-- Wikipedia Logo-->
+                        <Setter Target="WikiLogo.Visibility" Value="Visible"/>
+                        <Setter Target="ImageGrid.Grid.Row" Value="0"/>
+                        <Setter Target="ImageGrid.Grid.RowSpan" Value="4"/>
+                        <Setter Target="ImageGrid.Grid.Column" Value="0"/>
+                        <Setter Target="ImageGrid.Grid.ColumnSpan" Value="5"/>
+                        <Setter Target="WikiLogo.Margin" Value="0,0,0,0"/>
+                        <Setter Target="WikiLogo.Stretch" Value="Uniform"/>
+                        <!--Progress Ring -->
+                        <Setter Target="progressRing.Width" Value="60"/>
+                        <Setter Target="progressRing.Height" Value="60"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Layout_2">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!-- Query button/toggle-->
+                        <Setter Target="searchQuery.FontSize" Value="28"/>
+                        <Setter Target="searchQuery.Margin" Value="10,20,10,20"/>
+                        <Setter Target="searchQuery.MaxWidth" Value="1000"/>
+                        <!-- Submit button-->
+                        <Setter Target="submitbtn.FontSize" Value="20"/>
+                        <Setter Target="submitbtn.Margin" Value="5,5,5,5"/>
+                        <Setter Target="submitbtn.Height" Value="50"/>
+                        <Setter Target="submitbtn.Width" Value="120"/>
+                        <!-- Stack Panel-->
+                        <Setter Target="StackPanelGrid.Grid.Row" Value="4"/>
+                        <Setter Target="StackPanelGrid.Grid.RowSpan" Value="2"/>
+                        <Setter Target="StackPanelGrid.Grid.Column" Value="1"/>
+                        <Setter Target="StackPanelGrid.Grid.ColumnSpan" Value="3"/>
+                        <!--<Setter Target="searchQuery.PlaceholderText" Value="Small"/>-->
+                        <!-- Wikipedia Logo-->
+                        <Setter Target="WikiLogo.Visibility" Value="Visible"/>
+                        <Setter Target="ImageGrid.Grid.Row" Value="0"/>
+                        <Setter Target="ImageGrid.Grid.RowSpan" Value="4"/>
+                        <Setter Target="ImageGrid.Grid.Column" Value="0"/>
+                        <Setter Target="ImageGrid.Grid.ColumnSpan" Value="5"/>
+                        <Setter Target="WikiLogo.Margin" Value="10,10,10,10"/>
+                        <Setter Target="WikiLogo.Stretch" Value="Uniform"/>
+                        <!--Progress Ring -->
+                        <Setter Target="progressRing.Width" Value="90"/>
+                        <Setter Target="progressRing.Height" Value="90"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Layout_3">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1400"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!-- Query button/toggle-->
+                        <Setter Target="searchQuery.FontSize" Value="30"/>
+                        <Setter Target="searchQuery.Margin" Value="10,20,10,20"/>
+                        <Setter Target="searchQuery.MaxWidth" Value="1200"/>
+                        <!-- Submit button-->
+                        <Setter Target="submitbtn.FontSize" Value="24"/>
+                        <Setter Target="submitbtn.Margin" Value="5,5,5,5"/>
+                        <Setter Target="submitbtn.Height" Value="55"/>
+                        <Setter Target="submitbtn.Width" Value="120"/>
+                        <!-- Stack Panel-->
+                        <Setter Target="StackPanelGrid.Grid.Row" Value="4"/>
+                        <Setter Target="StackPanelGrid.Grid.RowSpan" Value="2"/>
+                        <Setter Target="StackPanelGrid.Grid.Column" Value="1"/>
+                        <Setter Target="StackPanelGrid.Grid.ColumnSpan" Value="3"/>
+                        <!--<Setter Target="searchQuery.PlaceholderText" Value="Medium"/>-->
+                        <!-- Wikipedia Logo-->
+                        <Setter Target="WikiLogo.Visibility" Value="Visible"/>
+                        <Setter Target="ImageGrid.Grid.Row" Value="0"/>
+                        <Setter Target="ImageGrid.Grid.RowSpan" Value="4"/>
+                        <Setter Target="ImageGrid.Grid.Column" Value="0"/>
+                        <Setter Target="ImageGrid.Grid.ColumnSpan" Value="5"/>
+                        <Setter Target="WikiLogo.Margin" Value="10,10,10,10"/>
+                        <Setter Target="WikiLogo.Stretch" Value="Uniform"/>
+                        <!--Progress Ring -->
+                        <Setter Target="progressRing.Width" Value="100"/>
+                        <Setter Target="progressRing.Height" Value="100"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Layout_4">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1800"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!-- Query button/toggle-->
+                        <Setter Target="searchQuery.FontSize" Value="32"/>
+                        <Setter Target="searchQuery.Margin" Value="10,20,10,20"/>
+                        <Setter Target="searchQuery.MaxWidth" Value="1200"/>
+                        <!-- Submit button-->
+                        <Setter Target="submitbtn.FontSize" Value="24"/>
+                        <Setter Target="submitbtn.Margin" Value="5,5,5,5"/>
+                        <Setter Target="submitbtn.Height" Value="60"/>
+                        <Setter Target="submitbtn.Width" Value="120"/>
+                        <!-- Stack Panel-->
+                        <Setter Target="StackPanelGrid.Grid.Row" Value="4"/>
+                        <Setter Target="StackPanelGrid.Grid.RowSpan" Value="2"/>
+                        <Setter Target="StackPanelGrid.Grid.Column" Value="1"/>
+                        <Setter Target="StackPanelGrid.Grid.ColumnSpan" Value="3"/>
+                        <!--<Setter Target="searchQuery.PlaceholderText" Value="Large"/>-->
+                        <!-- Wikipedia Logo-->
+                        <Setter Target="WikiLogo.Visibility" Value="Visible"/>
+                        <Setter Target="ImageGrid.Grid.Row" Value="0"/>
+                        <Setter Target="ImageGrid.Grid.RowSpan" Value="4"/>
+                        <Setter Target="ImageGrid.Grid.Column" Value="0"/>
+                        <Setter Target="ImageGrid.Grid.ColumnSpan" Value="5"/>
+                        <Setter Target="WikiLogo.Margin" Value="15,15,15,15"/>
+                        <Setter Target="WikiLogo.Stretch" Value="Uniform"/>
+                        <!--Progress Ring -->
+                        <Setter Target="progressRing.Width" Value="125"/>
+                        <Setter Target="progressRing.Height" Value="125"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>

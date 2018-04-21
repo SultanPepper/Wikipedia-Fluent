@@ -20,6 +20,7 @@ using Wikipedia_Fluent.Models;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows;
+using System.ComponentModel;
 
 
 
@@ -33,29 +34,22 @@ namespace Wikipedia_Fluent
     public sealed partial class MainPage : Windows.UI.Xaml.Controls.Page
     {
         public string titleofPage;
+        public bool splitviewtogglebtn_ClickedAndHidden = false;
+
 
 
         public MainPage()
         {
             this.InitializeComponent();
             backbtn.Visibility = Visibility.Visible;
+            //PageTitle_Textblock.Visibility = Visibility.Collapsed;
             forwardbtn.Foreground = new SolidColorBrush(Windows.UI.Colors.DimGray);
             //forwardbtn.Visibility = Visibility.Collapsed;
             ContentFrame.Navigate(typeof(HomePage));
 
+            
 
-            /*          
-             if (Frame.CanGoBack)
-                backbtn.Visibility = Visibility.Visible;
 
-            else
-                backbtn.Visibility = Visibility.Collapsed;
-
-            if (Frame.CanGoForward)
-                forwardbtn.Visibility = Visibility.Visible;
-            else
-                forwardbtn.Visibility = Visibility.Collapsed;
-             */
            
         }
 
@@ -66,15 +60,17 @@ namespace Wikipedia_Fluent
             mySplitView.IsPaneOpen = !mySplitView.IsPaneOpen;
         }
 
-        private void splitviewtogglebtn_Click(object sender, RoutedEventArgs e)
+        private void homebtn_Click(object sender, RoutedEventArgs e)
         {
-            mySplitView.IsPaneOpen = !mySplitView.IsPaneOpen;
+            ContentFrame.Navigate(typeof(HomePage));
+            mySplitView.IsPaneOpen = false;
         }
 
         private void settingbtn_Click(object sender, RoutedEventArgs e)
         {
             forwardbtn.Foreground = new SolidColorBrush(Windows.UI.Colors.Black);
             ContentFrame.Navigate(typeof(SettingsPage));
+            mySplitView.IsPaneOpen = false;
         }
 
         private void backbtn_Click(object sender, RoutedEventArgs e)
@@ -84,10 +80,32 @@ namespace Wikipedia_Fluent
                 ContentFrame.GoBack();
         }
 
+        private void splitviewtogglebtn_Click(object sender, RoutedEventArgs e)
+        {
+            splitviewtogglebtn.Visibility = Visibility.Collapsed;
+            splitviewtogglebtn_ClickedAndHidden = true;
+
+            mySplitView.IsPaneOpen = !mySplitView.IsPaneOpen;
+        }
+
         private void forwardbtn_Click(object sender, RoutedEventArgs e)
         {
             if (ContentFrame.CanGoForward)
                 ContentFrame.GoForward();
+        }
+
+        private void mySplitView_PaneIsClosing(SplitView sender, SplitViewPaneClosingEventArgs args)
+        {
+            if (splitviewtogglebtn_ClickedAndHidden == true && splitviewtogglebtn.Visibility == Visibility.Collapsed)
+            {
+                splitviewtogglebtn.Visibility = Visibility.Visible;
+                splitviewtogglebtn_ClickedAndHidden = false;
+            }
+        }
+
+        private void mySplitView_PaneIsOpening(SplitView sender, object args)
+        {
+
         }
 
 
