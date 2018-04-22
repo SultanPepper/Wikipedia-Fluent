@@ -43,10 +43,8 @@
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
-                 Background="White"
                  Foreground="Black"
-                 PlaceholderText="Nothing yet.."
-                 Margin="0,0,0,2"/>
+                 Margin="0,0,0,0"/>
 
 
 

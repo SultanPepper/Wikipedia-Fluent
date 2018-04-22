@@ -72,6 +72,8 @@ namespace Wikipedia_Fluent
             
             progressRing.IsActive = true;
 
+            /*
+
             string parsedtitle = ParseTitle(searchQuery.Text);
             string URL = API_URL(parsedtitle);
 
@@ -88,7 +90,7 @@ namespace Wikipedia_Fluent
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
             //Get page title
-            wikiContent.pagetitle = data.query.pages[0].title;
+            wikiContent.PageTitle = data.query.pages[0].title;
 
             //Intro tables/data
             string pattern = @"({{(.|\n)*?\n}}\n\n)'";
@@ -96,9 +98,10 @@ namespace Wikipedia_Fluent
             Match match = regex.Match(input);
 
             if (match.Success) {
-                intro.datatables = match.Groups[1].Value;
+                wikiContent.Introduction.DataTable = match.Groups[1].Value;
+                //intro.datatable = match.Groups[1].Value;
             } else {
-                intro.datatables = "There was difficulty extracting the data tables";
+                wikiContent.Introduction.DataTable = "There was difficulty extracting the data tables";
             }
 
             //Extract out introductory paragraph
@@ -108,18 +111,17 @@ namespace Wikipedia_Fluent
 
             if (match.Success) {
                 ParsedWikiPage.PageContent = match.Groups[2].Value;
-                intro.content = match.Groups[2].Value;
+                wikiContent.Introduction.Content = match.Groups[2].Value;
 
-                //input = regex.Replace(input, @"$1$4"); //$3 = A mysterious unaccounted for '}'
             } else {
-                intro.content = "Intro paragraph could not be parsed with RegEx";
+                wikiContent.Introduction.Content = "Intro paragraph could not be parsed with RegEx";
             }
 
             //Remove intro data from output
             pattern = @"(^{{.*?}}\\n\\n'''.*?\\n\\n)(==)";
             regex = new Regex(pattern);
             input = regex.Replace(input, "$2");
-            wikiContent.remainingcontent = input;
+            wikiContent.RemainingContent = input;
 
 
             //Extract out header content into array
@@ -135,74 +137,142 @@ namespace Wikipedia_Fluent
 
             
             int array_length = Content_Under_Header.Length;
-            List<Headers> headers = new List<Headers>() { };
-            int i = 0;
+            List<Header> headers = new List<Header>() { };
+
+ 
             foreach (var Var in Content_Under_Headers) {
 
-
-
                 string sh_input = Var.ToString();
-                string sh_pattern = @"(\n\n===.*?===\n(.|\n)*)[^===]";
-                
-
-                string[] array_of_subheaders = Regex.Matches(sh_input, sh_pattern)
-                                        .OfType<Match>()
-                                        .Select(m => m.Groups[1].Value)
-                                        .ToArray();
+                string sh_pattern = @"(\n\n===.*?===\n(.|\n)*)[^===]";           
+                string[] sh_array = Regex.Matches(sh_input, sh_pattern)
+                    .OfType<Match>()
+                    .Select(m => m.Groups[1].Value)
+                    .ToArray();
 
                 Regex sh_regex = new Regex(sh_pattern);
-
                 string headers_without_subheaders = sh_regex.Replace(sh_input, "");
 
-                if (array_of_subheaders.Length == 0) {
-                    string[] empty_array = new string[1] { "" };
-                    empty_array = array_of_subheaders;
-                }
-                    
-
-                headers.Add(new Headers() { content = headers_without_subheaders, subheaders = array_of_subheaders });
-
-  
+                List<Subheader> sh_content = new List<Subheader>() { };
+                for (int j = 0; j < sh_array.Length; j++)
+                    {
+                    sh_content.Add(new Subheader() { Content = sh_array[j] });
+                    }
+              
+               headers.Add(new Header() { Content = headers_without_subheaders, Subheaders = sh_content });
             }
-             
-                
-            
-                foreach (Headers Var in headers) {
-                    ParsedWikiPage.PageContent += Environment.NewLine;
-                    ParsedWikiPage.PageContent += Environment.NewLine;
-                    ParsedWikiPage.PageContent += Environment.NewLine;
-                    ParsedWikiPage.PageContent += "============";
-                    ParsedWikiPage.PageContent += "============";
-                    ParsedWikiPage.PageContent += "============";
-                    ParsedWikiPage.PageContent += Environment.NewLine;
-                    ParsedWikiPage.PageContent += "============";
-                    ParsedWikiPage.PageContent += "============";
-                    ParsedWikiPage.PageContent += "============";
-                    ParsedWikiPage.PageContent += Environment.NewLine;
-                    ParsedWikiPage.PageContent += "============";
-                    ParsedWikiPage.PageContent += "============";
-                    ParsedWikiPage.PageContent += "============";
-                    ParsedWikiPage.PageContent += Environment.NewLine;
-                    ParsedWikiPage.PageContent += Var.content;
-                        foreach (var Var1 in Var.subheaders) {
-                    ParsedWikiPage.PageContent += Var1.ToString();
-                    ParsedWikiPage.PageContent += "@@@@@@@@@@@@@@@@@@";
-                }
-                      
-                    
-                    ParsedWikiPage.PageContent += Environment.NewLine;
-                    ParsedWikiPage.PageContent += Environment.NewLine;
-                }
-            
+            wikiContent.Headers = headers; //Store headers/subheaders within wikiContent object
 
+
+
+      
+            WikiPageContentsToPass PassThruContent = new WikiPageContentsToPass();
+            PassThruContent.PageTitle = wikiContent.PageTitle;
+            //PassThruContent.PageContent = intro.datatable + intro.content + ParsedWikiPage.PageContent;
+
+            foreach (Header header in headers)
+            {
+                PassThruContent.PageContent = String.Format("{0}{1}", PassThruContent.PageContent, header.Content);
+
+                for (int j = 0; j < header.Subheaders.Count; j++)
+                {
+                    PassThruContent.PageContent = String.Format("{0}{1}", PassThruContent.PageContent, header.Subheaders[j].Content);
+                }
+
+            }
+
+    */
             
+            WikiContent_Rootobject wikiContent = new WikiContent_Rootobject();
+            Introduction introduction = new Introduction();
+            List<Header> headers = new List<Header>();
+            List<Subheader> subheaders = new List<Subheader>();
+            List<SubSubHeader> subsubheaders = new List<SubSubHeader>();
+
+            string input;
+            string pattern;
+            string replace_with;
+            string error_msg;
+            int group_num;
+            
+            Rootobject data_AsRootObject = await wikiContent.GetPageContent(searchQuery.Text);
+            string data_AsString = data_AsRootObject.query.pages[0].revisions[0].content;
+
+            //Removes comments 
+            pattern = @"<!--[^Staff](.|\n)*?-->";
+            string data_AsStringCut = wikiContent.Regex_DeleteData(data_AsString, pattern, "");
+
+            //TITLE
+            wikiContent.PageTitle = wikiContent.GetPageTitle(data_AsRootObject);
+
+            //INTRO - Content
+            introduction.Content = wikiContent.GetIntroContent(data_AsStringCut);
+            //INTRO - Data and tables
+            introduction.DataTable = wikiContent.GetIntroTablesAndData(data_AsStringCut);
+            //INTRO - Remove data from page
+            data_AsStringCut = wikiContent.RemoveIntroContent(data_AsStringCut);
+
+            //HEADERS, SUBHEADERS, and SUBSUBHEADERS
+  
+            error_msg = "There was a problem divvying up the headers";
+            pattern = @"(\n==(?!=)(\s|\w)?.+?==(.|\n)*?\n)(!?==(\w|\s))";
+            input = data_AsStringCut;
+            group_num = 1;
+            string[] headers_with_children = wikiContent.Regex_PutMatchesIntoArray(input, pattern, group_num, error_msg);
+
+
+
+            List<Teststring> myteststringlist = new List<Teststring>();
+            foreach (string header_with_children in headers_with_children)
+            {
+                pattern = @"(^==(\w|\d|\s).*==(.|\n)*\n\n)(==)";
+                input = header_with_children;
+                group_num = 1;
+                error_msg = "There was an issue parsing the headers from subheaders and subsubheaders";
+
+                //Adjust method HERE.
+                //If no match found, then make sure it starts with ==.*== and delete that
+                string header = wikiContent.Regex_SelectMatch(input, pattern, group_num, error_msg);
+
+                pattern = @"(^==(\w|\d|\s).*==\n(.|\n)*)\n\n(==)";
+                input = header_with_children;
+                group_num = 1;
+                string replacement = @"\n\n\n\n\n==";
+                string input_without_header = wikiContent.Regex_ReplaceMatch(input, pattern, replacement);
+
+                if (input_without_header != String.Empty && input_without_header != null)
+                {
+                    myteststringlist.Add(new Teststring() { teststringcontent = input_without_header });
+                } else
+                    myteststringlist.Add(new Teststring() { teststringcontent = "###############" + Environment.NewLine + "###########" });
+
+
+
+            }
+
+            Teststring teststring1 = new Teststring();
+            foreach (var Var1 in myteststringlist)
+            {
+                teststring1.teststringcontent += Var1.teststringcontent;
+                teststring1.teststringcontent += Environment.NewLine;
+                teststring1.teststringcontent += "@@@@@@@@@@@@@@@@@@@";
+                teststring1.teststringcontent += "@@@@@@@@@@@@@@@@@@@";
+                teststring1.teststringcontent += Environment.NewLine;
+                teststring1.teststringcontent += "@@@@@@@@@@@@@@@@@@@";
+                teststring1.teststringcontent += "@@@@@@@@@@@@@@@@@@@";
+                teststring1.teststringcontent += Environment.NewLine;
+            }
+
+
 
 
 
             WikiPageContentsToPass PassThruContent = new WikiPageContentsToPass();
-            PassThruContent.PageTitle = wikiContent.pagetitle;
-            PassThruContent.PageContent = intro.datatables + intro.content + ParsedWikiPage.PageContent;
+            wikiContent.Introduction = introduction;
+            PassThruContent.PageTitle = wikiContent.PageTitle;
+            PassThruContent.PageContent = teststring1.teststringcontent;
 
+            
+            
                 Frame.Navigate(typeof(ContentPage), PassThruContent);
             }
         
@@ -245,7 +315,6 @@ namespace Wikipedia_Fluent
             string replacement = "%20";
             Regex regex = new Regex(@"\s");
             string formatted_query = regex.Replace(input, replacement);
-
             return formatted_query;
         }
 

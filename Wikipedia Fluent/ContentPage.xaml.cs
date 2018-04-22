@@ -39,7 +39,7 @@ namespace Wikipedia_Fluent
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
 
-            WikiPageContentsToPass wikiContent = (WikiPageContentsToPass)e.Parameter;
+            WikiPageContentsToPass parametersPassed = (WikiPageContentsToPass)e.Parameter;
 
             //string headers = ParseWikiText.GetHeaders(PassedThruPage.PageContent);
 
@@ -49,17 +49,10 @@ namespace Wikipedia_Fluent
 
 
 
-            string nl = Environment.NewLine;
-            string div = "======================" + Environment.NewLine;
 
 
-            pageTitle.Text = wikiContent.PageTitle;
-            pageContent.Text = wikiContent.PageContent;   
-
-
-
-            //pageTitle.Text = parametersPassed.PageTitle;
-            //pageContent.Text = parametersPassed;
+            pageTitle.Text = parametersPassed.PageTitle;
+            pageContent.Text = parametersPassed.PageContent;
 
         }
     }
