@@ -11,34 +11,28 @@ using Wikipedia_Fluent.Models;
 namespace Wikipedia_Fluent.Models
 {
 
+    public class ForEachContentHolder
+    {
+        public string StringContent { get; set; }
+        public int IntContent { get; set; }
+        public List<string[]> stringlist { get; set; }
+    }
+
     public class Teststring
     {
         public string teststringcontent { get; set; }
     }
 
     public class WikiContent_Rootobject
-        {
-            public string PageTitle { get; set; }
-            public string RemainingContent { get; set; }
-            public Introduction Introduction { get; set; }
-            public List<Header> Headers { get; set; }
-
+    {
+        public string PageTitle { get; set; }
+        public string RemainingContent { get; set; }
+        public Introduction introduction { get; set; }
+        public List<Header> headers { get; set; }
 
 
         //Http methods
-        public async Task<Rootobject> GetPageContent(string SearchQuery)
-        {
-            HttpClient http = new HttpClient();
-            string searchquery = SearchQuery;
-            string URL = GetURL(searchquery);
-
-            var response = await http.GetAsync(URL);
-            var result = await response.Content.ReadAsStringAsync();
-            var data = JsonConvert.DeserializeObject<Rootobject>(result);
-
-            return data;
-        }
-        private string GetURL(string SearchQuery)
+        public string GetURL(string SearchQuery)
         {
             string searchquery = SearchQuery;
 
@@ -56,21 +50,17 @@ namespace Wikipedia_Fluent.Models
             string api_path = "/w/api.php";
             sb_URL.Append(api_path);
 
-            string action = "query";
+            string action = "parse";
             action = String.Format("?action={0}", action);
             sb_URL.Append(action);
 
-            string titles = Regex_ReplaceMatch(searchquery, @"\s", "%20");
-            titles = String.Format("&titles={0}", titles);
-            sb_URL.Append(titles);
+            string page = Regex_ReplaceMatch(searchquery, @"\s", "%20");
+            page = String.Format("&page={0}", page);
+            sb_URL.Append(page);
 
-            string prop = "revisions";
+            string prop = "revisions|sections|wikitext";
             prop = String.Format("&prop={0}", prop);
             sb_URL.Append(prop);
-
-            string rvprop = "content";
-            rvprop = String.Format("&rvprop={0}", rvprop);
-            sb_URL.Append(rvprop);
 
             string format = "json";
             format = String.Format("&format={0}", format);
@@ -84,8 +74,21 @@ namespace Wikipedia_Fluent.Models
             sb_URL.Append(andRedirects);
 
             string URL = sb_URL.ToString();
+
             return URL;
 
+        }
+        public async Task<Rootobject> GetPageContent(string SearchQuery)
+        {
+            HttpClient http = new HttpClient();
+            string searchquery = SearchQuery;
+            string URL = GetURL(searchquery);
+
+            var response = await http.GetAsync(URL);
+            var result = await response.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<Rootobject>(result);
+
+            return data;
         }
 
 
@@ -93,7 +96,7 @@ namespace Wikipedia_Fluent.Models
         public string GetPageTitle(Rootobject Data)
         {
             Rootobject data = Data;
-            string PageTitle = data.query.pages[0].title;
+            string PageTitle = data.parse.title;
             return PageTitle;
         }
         public string GetIntroTablesAndData(string Input)
@@ -123,7 +126,7 @@ namespace Wikipedia_Fluent.Models
             string output = Regex_DeleteData(input, pattern, "");
             return output;
         }
-        public string[] GetArrayOfHeaders (string Input)
+        public string[] GetArrayOfHeaders(string Input)
         {
             string input = Input;
             int group_selected = 1;
@@ -131,7 +134,7 @@ namespace Wikipedia_Fluent.Models
             string error_msg = "There was a problem extracting the headers into the array!";
 
 
-            string[] headers = Regex_PutMatchesIntoArray(input, pattern, group_selected, error_msg);
+            string[] headers = Regex_PutMatchesIntoArray(input, pattern, group_selected);
             return headers;
         }
 
@@ -150,12 +153,41 @@ namespace Wikipedia_Fluent.Models
             if (match.Success)
             {
                 return match.Groups[group_selected].Value;
-            }
-
-            else
+            } else
             {
                 return error_msg;
             }
+        }
+        public string Regex_SelectMatch(string Input, string Pattern, int Group_Selected, string Pattern_If_Fail, int Group_Selected_If_Fail, string Error_Msg)
+        {
+            string pattern = Pattern;
+            string pattern_if_fail = Pattern_If_Fail;
+            string input = Input;
+            int group_selected = Group_Selected;
+            int group_selected_if_fail = Group_Selected_If_Fail;
+            string error_msg = Error_Msg;
+
+            Regex regex = new Regex(pattern);
+            Match match = regex.Match(input);
+
+            if (match.Success)
+            {
+                return match.Groups[group_selected].Value;
+            } else
+            {
+                regex = new Regex(pattern_if_fail);
+                Match match_alt = regex.Match(input);
+
+                if (match.Success)
+                {
+                    return match.Groups[group_selected_if_fail].Value;
+                } else
+                {
+                    return error_msg;
+                }
+
+            }
+
         }
         public string Regex_DeleteData(string Input, string Pattern, string Regex_Replacement)
         {
@@ -168,14 +200,85 @@ namespace Wikipedia_Fluent.Models
             return output;
 
         }
-        public string[] Regex_PutMatchesIntoArray(string Input, string Pattern, int Group_Selected, string Error_Msg)
+        public string[] Regex_PutMatchesIntoArray(string Input, string Pattern, int Group_Selected)
         {
             string pattern = Pattern;
             string input = Input;
             int group_selected = Group_Selected;
-            string error_msg = Error_Msg;
 
             string[] output = Regex.Matches(input, pattern).OfType<Match>().Select(m => m.Groups[group_selected].Value).ToArray();
+            return output;
+        }
+        public string[] Regex_PutHeadersAndDerivativesToArray(string Input)
+        {
+            string input = Input;
+            string pattern = @"((^==|\n==|\n\n==|\n\n\n==)(\w|\d|\s).*?==(.|\n|\*)*?)(?=(^==(\w|\d|\s)|\n==(\w|\d|\s)))";
+            int group_selected = 0;
+
+            string[] output = Regex.Matches(input, pattern).OfType<Match>().Select(m => m.Groups[group_selected].Value).ToArray();
+            return output;
+        }
+        public string[] Regex_PutSubheadersAndDerivativesToArray(string Input)
+        {
+            string input = Input;           
+            string pattern = @"((^==|\n==)=(\w|\d|\s).*?==(.|\n|\*)*?(?=(^={2,3}(\w|\d|\s)|\n={2,3}(\w|\d|\s)|$)))";
+            int group_selected = 0;
+
+            string[] output = Regex.Matches(input, pattern).OfType<Match>().Select(m => m.Groups[group_selected].Value).ToArray();
+            return output;
+        }
+        public string[] Regex_Put_Sub_SubheadersAndDerivativesToArray(string Input)
+        {
+            string input = Input;
+            string pattern = @"((^===|\n===)=(\w|\d|\s).*?==(.|\n|\*)*?(?=(^={2,3}(\w|\d|\s)|\n={2,4}(\w|\d|\s)|$)))";
+            int group_selected = 0;
+
+            string[] output = Regex.Matches(input, pattern).OfType<Match>().Select(m => m.Groups[group_selected].Value).ToArray();
+            return output;
+        }
+        public string[] Regex_Put_Sub_Sub_SubheadersAndDerivativesToArray(string Input)
+        {
+            string input = Input;
+            string pattern = @"((^====|\n====)=(\w|\d|\s).*?==(.|\n|\*)*?(?=(^={5}(\w|\d|\s)|\n={5}(\w|\d|\s)|$)))";
+            int group_selected = 0;
+
+            string[] output = Regex.Matches(input, pattern).OfType<Match>().Select(m => m.Groups[group_selected].Value).ToArray();
+            return output;
+        }
+        public string[] Regex_PutOnlySubheadersToArray(string Input)
+        {
+            string input = Input;
+
+            
+
+
+            string pattern = @"((^==|\n==)=(\w|\d|\s).*?==(.|\n|\*)*?(?=(^={3,5}(\w|\d|\s)|\n={3,5}(\w|\d|\s)|$)))";
+            int group_selected = 0;
+
+            string[] output = Regex.Matches(input, pattern).OfType<Match>().Select(m => m.Groups[group_selected].Value).ToArray();
+
+
+            List<string> mystringlist = new List<string>();
+            return output;
+        }
+        public string[] Regex_PutMatchesIntoArray(string Input, string Pattern, int Group_Selected, string Pattern_If_Fail, int Group_Selected_If_Fail, string Error_Msg)
+        {
+            string input = Input;
+            string pattern = Pattern;
+            int group_selected = Group_Selected;
+
+            string pattern_if_fail = Pattern_If_Fail;
+            int group_selected_if_fail = Group_Selected_If_Fail;
+
+
+            string error_msg = Error_Msg;
+
+            
+
+
+            string[] output = Regex.Matches(input, pattern).OfType<Match>().Select(m => m.Groups[group_selected].Value).ToArray();
+
+
             return output;
         }
         public string Regex_ReplaceMatch(string Input, string Pattern, string Replacement)
@@ -188,56 +291,235 @@ namespace Wikipedia_Fluent.Models
             string output = regex.Replace(input, replacement);
             return output;
         }
-        
+        public string Regex_ReplaceMatch(string Input, string Pattern, string Replacement, string Pattern_If_Fail, string Replacement_If_Fail)
+        {
+            string pattern = Pattern;
+            string pattern_if_fail = Pattern_If_Fail;
+            string input = Input;
+            string output;
+            string replacement = Replacement;
+            string replacement_if_fail = Replacement_If_Fail;
+            Regex regex = new Regex(pattern);
+            Match match = regex.Match(input);
 
+            if (match.Success)
+            {
+                output = regex.Replace(input, replacement);
+            } else
+            {
+                regex = new Regex(pattern_if_fail);
+                output = regex.Replace(input, replacement_if_fail);
+
+            }
+
+            return output;
+        }
+        public string Regex_GetFirstMatch(string Input)
+        {
+            string input = Input;
+
+            string pattern_contentmatch = @"((^==|\n==|\n\n==|\n\n\n==)(\w|\d|\s).*?==(.|\n|\*)*?)";
+            string pattern_lookaheadmatchA = @"(?=(^==(\w|\d|\s)|\n==(\w|\d|\s)|^===(\w|\d|\s)|\n===(\w|\d|\s)";
+            string pattern_lookaheadmatchB = @"|^====(\w|\d|\s)|\n====(\w|\d|\s)|^=====(\w|\d|\s)|\n=====(\w|\d|\s)))";
+            string pattern = String.Format("{0}{1}{2}", pattern_contentmatch, pattern_lookaheadmatchA, pattern_lookaheadmatchB);
+
+            string pattern_if_fail = @"((^=|\n=)=(\w|\d|\s).*?==(.|\n|\*)*)";
+            string first_match;
+            string error_msg = String.Format("There was an issue parsing the match collection{0}",
+                                             "The problem was with Regex_GetFirstMatch()");
+
+
+            Match m = Regex.Match(input, pattern);
+
+            if (m.Success)
+            {
+                first_match = m.Value;
+            }
+            else
+            {
+                Match m_if_fail = Regex.Match(input, pattern_if_fail);
+                if (m_if_fail.Success)
+                {
+                    first_match = m_if_fail.Value;
+                }
+
+                else
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(Environment.NewLine);
+                    sb.Append(Environment.NewLine);
+                    sb.Append("There was issue matching the header within the");
+                    sb.Append("subheaders with children group.");
+                    sb.Append(Environment.NewLine);
+                    sb.Append(Environment.NewLine);
+                    sb.Append("The error was under section '//HEADERS, SUBHEADERS,");
+                    sb.Append(" AND SUBSUBHEADERS' in HomePage.xaml.cs");
+                    sb.Append(Environment.NewLine);
+                    sb.Append(Environment.NewLine);
+                    sb.Append("The method in error is wikiContent.Regex_GetFirstMatch()");
+                    sb.Append(Environment.NewLine);
+                    sb.Append(Environment.NewLine);
+
+                    first_match = sb.ToString();
+                }
+                  
+            }
+
+            return first_match;
+
+        }
+        public string Regex_GetHeader(string Input)
+        {
+            string input = Input;
+            string output;
+
+            string pattern_contentmatch = @"((^==|\n==|\n\n==|\n\n\n==)(\w|\d|\s).*?==(.|\n|\*)*?)";
+            string pattern_lookaheadmatchA = @"(?=(^==(\w|\d|\s)|\n==(\w|\d|\s)|^===(\w|\d|\s)|\n===(\w|\d|\s)";
+            string pattern_lookaheadmatchB = @"|^====(\w|\d|\s)|\n====(\w|\d|\s)|^=====(\w|\d|\s)|\n=====(\w|\d|\s)))";
+            string pattern = String.Format("{0}{1}{2}", pattern_contentmatch, pattern_lookaheadmatchA, pattern_lookaheadmatchB);
+
+            string pattern_if_fail = @"((^=|\n=)=(\w|\d|\s).*?==(.|\n|\*)*)";
+            string error_msg = String.Format("There was an issue parsing the match collection{0}",
+                                                 "The problem was with Regex_Parse_Headers_And_Nodes()");
+            Regex regex = new Regex(""); //To be redefined at each step
+
+            //Get the header
+            Match m = Regex.Match(input, pattern);
+            Match m_if_fail = Regex.Match(input, pattern_if_fail);
+
+            if (m.Success)
+            {
+                //Creating the header
+                output = m.Value;
+                regex = new Regex(pattern);
+            } 
+            else if (m_if_fail.Success)
+            {
+
+                //Creating the header
+                output = m_if_fail.Value;
+                regex = new Regex(pattern_if_fail);
+            } 
+            else
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(Environment.NewLine);
+                sb.Append(Environment.NewLine);
+                sb.Append("There was issue matching the header within the");
+                sb.Append("subheaders with children group.");
+                sb.Append(Environment.NewLine);
+                sb.Append(Environment.NewLine);
+                sb.Append("The error was under section '//HEADERS, SUBHEADERS,");
+                sb.Append(" AND SUBSUBHEADERS' in HomePage.xaml.cs");
+                sb.Append(Environment.NewLine);
+                sb.Append(Environment.NewLine);
+                sb.Append("The method in error is wikiContent.Regex_GetFirstMatch()");
+                sb.Append(Environment.NewLine);
+                sb.Append(Environment.NewLine);
+
+                output = sb.ToString();
+            }
+
+            return output;
+
+        }
+        public string Regex_GetSubheader(string Input)
+        {
+            string input = Input;
+            string output;
+
+            string pattern = @"(^===|\n===)(\w|\d|\s).*?===(.|\n|\*)*?(?=(^==|\n==))";
+            string pattern_if_fail = @"((^==|\n==)=(\w|\d|\s).*?==(.|\n|\*)*(!?(=|\n=|^=)))";
+            string error_msg = String.Format("There was an issue parsing the match collection{0}",
+                                                 "The problem was with Regex_Parse_Headers_And_Nodes()");
+            Regex regex = new Regex(""); //To be redefined at each step
+
+            //Get the header
+            Match m = Regex.Match(input, pattern);
+            Match m_if_fail = Regex.Match(input, pattern_if_fail);
+
+            if (m.Success)
+            {
+                //Creating the header
+                output = m.Value;
+                regex = new Regex(pattern);
+            } else if (m_if_fail.Success)
+            {
+
+                //Creating the header
+                output = m_if_fail.Value;
+                regex = new Regex(pattern_if_fail);
+            } else
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(Environment.NewLine);
+                sb.Append(Environment.NewLine);
+                sb.Append("There was issue matching the header within the");
+                sb.Append("subheaders with children group.");
+                sb.Append(Environment.NewLine);
+                sb.Append(Environment.NewLine);
+                sb.Append("The error was under section '//HEADERS, SUBHEADERS,");
+                sb.Append(" AND SUBSUBHEADERS' in HomePage.xaml.cs");
+                sb.Append(Environment.NewLine);
+                sb.Append(Environment.NewLine);
+                sb.Append("The method in error is wikiContent.Regex_GetFirstMatch()");
+                sb.Append(Environment.NewLine);
+                sb.Append(Environment.NewLine);
+
+                output = sb.ToString();
+            }
+
+            return output;
+        }
+
+
+
+///////BREAK IN CLASS FOR WIKICONTENT_ROOT OBJECT/////////////////////////////////////
     }
 
         public class Introduction
-        {
+        {     
             public string Content { get; set; }
             public string DataTable { get; set; }
+            public List<String> References { get; set; }
+            public List<String> Images { get; set; }
         }
-
-        public class IntroductionContent : Introduction
-    {
-        public List<String> References { get; set; }
-        public List<String> Images { get; set; }
-    }
-
         public class Header
-    {
+        {
             public string Title { get; set; }
             public string Content { get; set; }
             public string Tables { get; set; }
             public List<String> References { get; set; }
             public List<String> Images { get; set; }
-            public List<Subheader> Subheaders { get; set; }
+            public List<S1_Header> s1_headers { get; set; }
+        }
+        public class S1_Header
+        {
+            public string s1_Title { get; set; }
+            public string s1_Content { get; set; }
+            public string s1_Table { get; set; }
+            public List<String> s1_References { get; set; }
+            public List<String> s1_Images { get; set; }
+            public List<S2_Header> s2_headers { get; set; }
+        }
+        public class S2_Header
+        {
+        public string s2_Title { get; set; }
+        public string s2_Content { get; set; }
+        public string s2_Table { get; set; }
+        public List<String> s2_References { get; set; }
+        public List<String> s2_Images { get; set; }
+        public List<S3_Header> s3_Headers { get; set; }
         }
 
-        public class Subheader
-    {
-            public string sbhdr_Title { get; set; }
-            public string sbhdr_Content { get; set; }
-            public string sbhdr_Table { get; set; }
-            public List<String> sbhdr_References { get; set; }
-            public List<String> sbhdr_Images { get; set; }
-            public List<SubSubHeader> SubSubHeaders { get; set; }
+        public class S3_Header
+        {
+        public string s3_Title { get; set; }
+        public string s3_Content { get; set; }
+        public string s3_Table { get; set; }
+        public List<String> s3_References { get; set; }
+        public List<String> s3_Images { get; set; }
         }
-
-        public class SubSubHeader
-    {
-        public string sb_sbhdr_Title { get; set; }
-        public string sb_sbhdr_Content { get; set; }
-        public string sb_sbhdr_Table { get; set; }
-        public List<String> sb_sbhdr_References { get; set; }
-        public List<String> sb_sbhdr_Images { get; set; }
-    }
-
-
-
-
-
-
 }
 
 

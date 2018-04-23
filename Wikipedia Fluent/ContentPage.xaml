@@ -6,15 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:Wikipedia_Fluent.Models"
-    xmlns:models="using:Wikipedia_Fluent.Models"
     mc:Ignorable="d">
 
-    <Page.DataContext>
-        <models:DataBinding />
-    </Page.DataContext>
 
-
-    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
  
         <Grid.RowDefinitions>
@@ -31,9 +25,9 @@
                    VerticalAlignment="Top"
                    MaxWidth="750"
                    MaxHeight="250"
-                   FontSize="32"
+                   FontSize="38"
                    Style="{ThemeResource TitleTextBlockStyle}"
-                   Margin="10,-60,10,0" />
+                   Margin="10,0,10,0" />
 
 
         <TextBox Name="pageContent"
@@ -55,7 +49,7 @@
                     <AdaptiveTrigger MinWindowWidth="0"/>
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
-                    <Setter Target="pageTitle.Margin" Value="10,-30,25,10"/>
+                    <!--<Setter Target="pageTitle.Margin" Value="25,-30,25,10"/>-->
                     <Setter Target="pageTitle.Visibility" Value="Collapsed"/>
                 </VisualState.Setters>
             </VisualState>
@@ -64,7 +58,7 @@
                     <AdaptiveTrigger MinWindowWidth="800"/>
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
-                    <Setter Target="pageTitle.Margin" Value="10,-30,25,0"/>
+                    <!--<Setter Target="pageTitle.Margin" Value="25,-30,25,0"/>-->
                     <Setter Target="pageTitle.Visibility" Value="Visible"/>
                 </VisualState.Setters>
             </VisualState>
@@ -73,7 +67,7 @@
                     <AdaptiveTrigger MinWindowWidth="1400"/>
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
-                    <Setter Target="pageTitle.Margin" Value="10,-30,25,0"/>
+                    <!--<Setter Target="pageTitle.Margin" Value="25,-30,25,0"/>-->
                     <Setter Target="pageTitle.Visibility" Value="Visible"/>
                 </VisualState.Setters>
             </VisualState>
@@ -82,7 +76,7 @@
                     <AdaptiveTrigger MinWindowWidth="1800"/>
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
-                    <Setter Target="pageTitle.Margin" Value="10,-30,,0"/>
+                    <!--<Setter Target="pageTitle.Margin" Value="25,-30,25,0"/>-->
                     <Setter Target="pageTitle.Visibility" Value="Visible"/>
                 </VisualState.Setters>
             </VisualState>

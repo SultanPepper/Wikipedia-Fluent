@@ -6,12 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:Wikipedia_Fluent.Models"
-    xmlns:models="using:Wikipedia_Fluent.Models"
     mc:Ignorable="d">
-
-    <Page.DataContext>
-        <models:DataBinding />
-    </Page.DataContext>
 
     <!--Had to build project before it recognized-->
 

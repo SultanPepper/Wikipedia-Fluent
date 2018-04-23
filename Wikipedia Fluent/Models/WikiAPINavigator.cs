@@ -21,7 +21,7 @@ namespace Wikipedia_Fluent.Models
         [DataMember]
         public bool batchcomplete { get; set; }
         [DataMember]
-        public Query query { get; set; }
+        public Query2 query { get; set; }
         [DataMember]
         public Parse parse { get; set; }
     }
@@ -34,6 +34,8 @@ namespace Wikipedia_Fluent.Models
         public string title { get; set; }
         [DataMember]
         public int pageid { get; set; }
+        [DataMember]
+        public string wikitext { get; set; }
         [DataMember]
         public Text text { get; set; }
         [DataMember]
@@ -140,7 +142,7 @@ namespace Wikipedia_Fluent.Models
 
 
     [DataContract]
-    public class Query
+    public class Query2
     {
         [DataMember]
         public List<Normalized> normalized { get; set; }

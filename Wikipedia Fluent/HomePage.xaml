@@ -44,7 +44,8 @@
                 MaxWidth="550"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"                    
-                KeyDown="searchQuery_KeyDown"                           
+                KeyDown="searchQuery_KeyDown"
+                Loaded="searchQuery_Loaded"                              
                 Margin="10,20,10,20"/>
                 
                 
