@@ -66,11 +66,7 @@ namespace Wikipedia_Fluent
 
             progressRing.IsActive = true;
 
-            /////////////////////////////////////////////////////////////////////
             WikiContent_Rootobject wikiContent = new WikiContent_Rootobject();
-            /////////////////////////////////////////////////////////////////////
-
-
             Rootobject data_AsRootObject = await wikiContent.GetPageContent(searchQuery.Text);
             string data_AsString = data_AsRootObject.parse.wikitext;
 
@@ -97,123 +93,118 @@ namespace Wikipedia_Fluent
             
 
            //HEADERS, SUBHEADERS, and SUBSUBHEADERS            
-           string[] header_and_derivative_content = wikiContent.Regex_PutHeadersAndDerivativesToArray(data_AsStringCut);
+           string[] n1_and_derivatives = wikiContent.Regex_Put_N1_AndDerivativesToArray(data_AsStringCut);
 
-           List<Header> headers = new List<Header>();
-           foreach (string section in header_and_derivative_content)
+           List<Node_1> N1 = new List<Node_1>(); //NOTE: White space still needs to be formatted
+           foreach (string section in n1_and_derivatives)
            {
-               Header currentheader = new Header();
-               currentheader.Content = wikiContent.Regex_GetHeader(section); ///////////<==============Header
+               Node_1 n1_iteration = new Node_1();
+               string n1_ContentAndTitle = wikiContent.Regex_Get_N1_ContentAndTitle(section); ////// <============== Header + Title
 
+                n1_iteration.Title = wikiContent.Regex_Get_N1_Title(section); /////////////// <============== Header Title
+                n1_iteration.Content = wikiContent.Regex_Get_N1_Content(section); ////// <============== Header Content
 
                //Contains Subheaders and derivatives
-               List<S1_Header> subheaders = new List<S1_Header>();
-               string[] subheaders_and_children = wikiContent.Regex_PutSubheadersAndDerivativesToArray(section);
-               foreach (string indiv_subheader_and_children in subheaders_and_children)
+               List<Node_2> N2 = new List<Node_2>();
+               string[] n2_and_derivatives = wikiContent.Regex_Put_N2_AndDerivativesToArray(section);
+               foreach (string indiv_subheader_and_children in n2_and_derivatives)
                {
                    Regex regex = new Regex(@"((^==|\n==)=(\w|\d|\s).*?==(.|\n|\*)*?(?=(^={2,5}(\w|\d|\s)|\n={2,5}(\w|\d|\s)|$)))");
                    Match m_sh = regex.Match(indiv_subheader_and_children);
-                   S1_Header currentsubheader = new S1_Header();
+                   Node_2 n2_iteration = new Node_2();
                    if (m_sh.Success)
                    {
-                       currentsubheader.s1_Content = m_sh.Value; ///////////<==============Subheader
-                       List<S2_Header> subsubheaders = new List<S2_Header>();
-                       string[] subsubheaders_and_children = wikiContent.Regex_Put_Sub_SubheadersAndDerivativesToArray(indiv_subheader_and_children);
-                       foreach (string indiv_subsubheader_and_children in subsubheaders_and_children)
+                       string n2_ContentAndTitle = wikiContent.Regex_Get_N2_ContentAndTitle(m_sh.Value); ////////// <============== Subheader + Title
+
+                       n2_iteration.Title = wikiContent.Regex_Get_N2_Title(m_sh.Value); //////////////// <============== Subheader Title
+                       n2_iteration.Content = wikiContent.Regex_Get_N2_Content(m_sh.Value); /////// <============== Subheader Content
+
+                       List<Node_3> N3 = new List<Node_3>();
+                       string[] n3_and_derivatives = wikiContent.Regex_Put_N3_AndDerivativesToArray(indiv_subheader_and_children);
+                       foreach (string indiv_subsubheader_and_children in n3_and_derivatives)
                        {
                            regex = new Regex(@"((^===|\n===)=(\w|\d|\s).*?==(.|\n|\*)*?(?=(^={2,5}(\w|\d|\s)|\n={2,5}(\w|\d|\s)|$)))");
                            Match m_sh_sh = regex.Match(indiv_subsubheader_and_children);
-                           S2_Header currentsubsubheader = new S2_Header();
+                           Node_3 n3_iteration = new Node_3();
                            if (m_sh_sh.Success)
                            {
-                               currentsubsubheader.s2_Content = m_sh_sh.Value;///////////<==============SubSUBheader
+                               string n3_ContentAndTitle = wikiContent.Regex_Get_N3_ContentAndTitle(m_sh_sh.Value); //////////////////////// <============== SubSubheader + Title
 
-                               List<S3_Header> subsubsubheaders = new List<S3_Header>();
-                               string[] subSUBsubheaders_and_children = wikiContent.Regex_Put_Sub_Sub_SubheadersAndDerivativesToArray(indiv_subsubheader_and_children);
-                               foreach (string indivSubSubSubheader in subSUBsubheaders_and_children)
+                                n3_iteration.Title = wikiContent.Regex_Get_N3_Title(m_sh_sh.Value); ////////////////////////// <============== SubSubheader Title
+                                n3_iteration.Content = wikiContent.Regex_Get_N3_Content(m_sh_sh.Value); ////////////// <============== SubSubheader Content
+
+                               List<Node_4> N4 = new List<Node_4>();
+                               string[] n4_and_derivatives = wikiContent.Regex_Put_N4_AndDerivativesToArray(indiv_subsubheader_and_children);
+                               foreach (string indivSubSubSubheader in n4_and_derivatives)
                                {
-                                   //And current S3 header to list of S3 headers
-                                   subsubsubheaders.Add(new S3_Header() { s3_Content = indivSubSubSubheader });
+                                    //And current S3 header to list of S3 headers
+                                    string n4_ContentAndTitle = wikiContent.Regex_Get_N4_ContentAndTitle(indivSubSubSubheader); /////////////// <============== SubSubSubheader + Title
+
+                                    string n4_Title = wikiContent.Regex_Get_N4_Title(indivSubSubSubheader); //////////////////// <============== SubSubSubheader Title
+                                    string n4_Content = wikiContent.Regex_Get_N4_Content(indivSubSubSubheader); // <============== SubSubSubheader Content
+
+                                    N4.Add(new Node_4() { Content = n4_Content, Title = n4_Title });
                                }
-                               //Add list of S3Headers into the current S2 header
-                               currentsubsubheader.s3_Headers = subsubsubheaders;
+
+                               // Capital letter = List (e.g., N3) || Lowercase = Single instance of object (e.g., n3_iteration)
+                               //Add list of fourth node as object in third node
+                               n3_iteration.node_4 = N4;
                            }
-                           //Add current S2 header to list of S2 headers
-                           subsubheaders.Add(currentsubsubheader);
+                           //Add third node to list of third nodes
+                           N3.Add(n3_iteration);
                        }
                        //Add list of current S2 headers to current S1 header
-                       currentsubheader.s2_headers = subsubheaders;
+                       n2_iteration.node_3 = N3;
                    }
                    //Add current S1 header to list of S1 headers
-                   subheaders.Add(currentsubheader);
+                   N2.Add(n2_iteration);
                }
-               //Add list of S1 headers to current header
-               currentheader.s1_headers = subheaders;
+                //Add list of S1 headers to current header
+                n1_iteration.node_2 = N2;
                //Add current header to list of headers
-               headers.Add(currentheader);
+                N1.Add(n1_iteration);
            }
            //Add list of headers to rootobject
-           wikiContent.headers = headers;
-
-
-
-            Teststring subheaderListAsString = new Teststring();
-            /*
-            int headers_count = wikiContent.headers.Count;
-
-            for (int i=0; i < headers_count; i++)
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                sb.Append("!!!!!!!!NEW HEADER!!!!!!!!!!!!!!!!!!!!!!");
-                sb.Append("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                sb.Append(Environment.NewLine);
-
-                sb.Append(wikiContent.headers[i].Content);
-
-
-                foreach (S1_Header Var in wikiContent.headers[i].s1_headers)
-                 {
-                    sb.Append("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    sb.Append("!!!!!!!!NEW SUB-HEADER!!!!!!!!!!!!!!!!!!!");
-                    sb.Append("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    sb.Append(Environment.NewLine);
-                    sb.Append(Environment.NewLine);
-                    sb.Append(Var.s1_Content);
-                    sb.Append(Environment.NewLine);
-                    sb.Append(Environment.NewLine);
-
-                    }
-
-                subheaderListAsString.teststringcontent += sb.ToString();
-
-            }
-            */
+           wikiContent.node_1 = N1;
 
             ForEachContentHolder teststring = new ForEachContentHolder();
-            int header_length = wikiContent.headers.Count;
+            int header_length = wikiContent.node_1.Count;
 
-            
+        
             for (int j=0; j<header_length;j++)
             {
-                teststring.StringContent += wikiContent.headers[j].Content;
+                int subheader_length = wikiContent.node_1[j].node_2.Count;
                 teststring.StringContent += Environment.NewLine;
+                teststring.StringContent += "------------------------------------------------------------------------------------------------------------------------------------------";
+                teststring.StringContent += Environment.NewLine;           
+                teststring.StringContent += wikiContent.node_1[j].Title;
+                teststring.StringContent += Environment.NewLine;
+                teststring.StringContent += Environment.NewLine;
+                teststring.StringContent += wikiContent.node_1[j].Content;
+                teststring.StringContent += Environment.NewLine;
+                teststring.StringContent += Environment.NewLine;
+
+                if (subheader_length > 0)
+                { 
+                teststring.StringContent += "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ";
+                teststring.StringContent += Environment.NewLine;
+                    }
+
+                for (int k=0; k<subheader_length;k++)
+                {          
+                teststring.StringContent += wikiContent.node_1[j].node_2[k].Title;
+                teststring.StringContent += Environment.NewLine;               
+                }
             }
+           
 
-
-
-
-
-
-
-
+            //Teeing up info to pass to next page
             WikiPageContentsToPass PassThruContent = new WikiPageContentsToPass();
             PassThruContent.PageTitle = wikiContent.PageTitle;
-
-            PassThruContent.PageContent = teststring.StringContent;
+            PassThruContent.PageContent = teststring.StringContent + data_AsString;
             
             
-                Frame.Navigate(typeof(ContentPage), PassThruContent);
+            Frame.Navigate(typeof(ContentPage), PassThruContent);
             }
         
 
