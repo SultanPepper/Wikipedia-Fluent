@@ -102,7 +102,7 @@ namespace Wikipedia_Fluent.Models
         public string GetIntroTablesAndData(string Input)
         {
             string input = Input;
-            string pattern = @"({{(.|\n)*?\n}}\n\n)'";
+            string pattern = @"^{{(.|\n)*?\n}}(?=\n''')";
             string errorMsg = "There was difficulty extracting the data tables";
             int group = 1;
             string IntroTablesAndData = Regex_SelectMatch(input, pattern, group, errorMsg);
@@ -111,27 +111,19 @@ namespace Wikipedia_Fluent.Models
         }
         public string GetIntroContent(string Input)
         {
-            string input = Input;
-            string pattern = @"(\n}}\n\n)('''(.|\s|\d)*?)(\n\n==\s?(\w|\d))";
+            string input = Input;           
+            string pattern = @"(\\n|^)'''(.|\n)*?(?=\n==(\w|\d))";
             string errorMsg = "There was difficulty extracting the data tables";
-            int group = 2;
+            int group = 0;
 
             string IntroContent = Regex_SelectMatch(input, pattern, group, errorMsg);
             return IntroContent;
-        }
-        public string RemoveIntroContent(string Input)
-        {
-            string input = Input;
-            string pattern = @"^{{(.|\n)*?(?=(==\s?(\w|\s|\d)+?)==)";
-            string output = Regex_DeleteData(input, pattern, "");
-            return output;
         }
         public string[] GetArrayOfHeaders(string Input)
         {
             string input = Input;
             int group_selected = 1;
             string pattern = @"(\n ==\s?(\w|\d|\s)*?\s?==[^=](.|\n)*?)(?=\n\n == (\s|\w|\d))";
-            string error_msg = "There was a problem extracting the headers into the array!";
 
 
             string[] headers = Regex_PutMatchesIntoArray(input, pattern, group_selected);
@@ -158,37 +150,6 @@ namespace Wikipedia_Fluent.Models
                 return error_msg;
             }
         }
-        public string Regex_SelectMatch(string Input, string Pattern, int Group_Selected, string Pattern_If_Fail, int Group_Selected_If_Fail, string Error_Msg)
-        {
-            string pattern = Pattern;
-            string pattern_if_fail = Pattern_If_Fail;
-            string input = Input;
-            int group_selected = Group_Selected;
-            int group_selected_if_fail = Group_Selected_If_Fail;
-            string error_msg = Error_Msg;
-
-            Regex regex = new Regex(pattern);
-            Match match = regex.Match(input);
-
-            if (match.Success)
-            {
-                return match.Groups[group_selected].Value;
-            } else
-            {
-                regex = new Regex(pattern_if_fail);
-                Match match_alt = regex.Match(input);
-
-                if (match.Success)
-                {
-                    return match.Groups[group_selected_if_fail].Value;
-                } else
-                {
-                    return error_msg;
-                }
-
-            }
-
-        }
         public string Regex_DeleteData(string Input, string Pattern, string Regex_Replacement)
         {
             string pattern = Pattern;
@@ -212,7 +173,7 @@ namespace Wikipedia_Fluent.Models
         public string[] Regex_PutHeadersAndDerivativesToArray(string Input)
         {
             string input = Input;
-            string pattern = @"((^==|\n==|\n\n==|\n\n\n==)(\w|\d|\s).*?==(.|\n|\*)*?)(?=(^==(\w|\d|\s)|\n==(\w|\d|\s)))";
+            string pattern = @"(^|\n)==(\s|\w|\d)+?==(\n|.)+?(?=(\n==(\w|\d|\s)|$))";
             int group_selected = 0;
 
             string[] output = Regex.Matches(input, pattern).OfType<Match>().Select(m => m.Groups[group_selected].Value).ToArray();
@@ -261,26 +222,6 @@ namespace Wikipedia_Fluent.Models
             List<string> mystringlist = new List<string>();
             return output;
         }
-        public string[] Regex_PutMatchesIntoArray(string Input, string Pattern, int Group_Selected, string Pattern_If_Fail, int Group_Selected_If_Fail, string Error_Msg)
-        {
-            string input = Input;
-            string pattern = Pattern;
-            int group_selected = Group_Selected;
-
-            string pattern_if_fail = Pattern_If_Fail;
-            int group_selected_if_fail = Group_Selected_If_Fail;
-
-
-            string error_msg = Error_Msg;
-
-            
-
-
-            string[] output = Regex.Matches(input, pattern).OfType<Match>().Select(m => m.Groups[group_selected].Value).ToArray();
-
-
-            return output;
-        }
         public string Regex_ReplaceMatch(string Input, string Pattern, string Replacement)
         {
             string pattern = Pattern;
@@ -318,10 +259,9 @@ namespace Wikipedia_Fluent.Models
         {
             string input = Input;
 
-            string pattern_contentmatch = @"((^==|\n==|\n\n==|\n\n\n==)(\w|\d|\s).*?==(.|\n|\*)*?)";
-            string pattern_lookaheadmatchA = @"(?=(^==(\w|\d|\s)|\n==(\w|\d|\s)|^===(\w|\d|\s)|\n===(\w|\d|\s)";
-            string pattern_lookaheadmatchB = @"|^====(\w|\d|\s)|\n====(\w|\d|\s)|^=====(\w|\d|\s)|\n=====(\w|\d|\s)))";
-            string pattern = String.Format("{0}{1}{2}", pattern_contentmatch, pattern_lookaheadmatchA, pattern_lookaheadmatchB);
+            string pattern_contentmatch = @"((^==|\n==)(\w|\d|\s).*?==(.|\n|\*)*?)";
+            string pattern_lookaheadmatchA = @"(?=(^={2,5}=(\w|\d|\s)|\n{2,5}=(\w|\d|\s)";
+            string pattern = String.Format("{0}{1}", pattern_contentmatch, pattern_lookaheadmatchA);
 
             string pattern_if_fail = @"((^=|\n=)=(\w|\d|\s).*?==(.|\n|\*)*)";
             string first_match;
@@ -373,18 +313,15 @@ namespace Wikipedia_Fluent.Models
             string input = Input;
             string output;
 
-            string pattern_contentmatch = @"((^==|\n==|\n\n==|\n\n\n==)(\w|\d|\s).*?==(.|\n|\*)*?)";
-            string pattern_lookaheadmatchA = @"(?=(^==(\w|\d|\s)|\n==(\w|\d|\s)|^===(\w|\d|\s)|\n===(\w|\d|\s)";
-            string pattern_lookaheadmatchB = @"|^====(\w|\d|\s)|\n====(\w|\d|\s)|^=====(\w|\d|\s)|\n=====(\w|\d|\s)))";
-            string pattern = String.Format("{0}{1}{2}", pattern_contentmatch, pattern_lookaheadmatchA, pattern_lookaheadmatchB);
+            string pattern = @"((^==|\n==)(\w|\d|\s).*?==(.|\n)*?)(?=(\n={3}(\w|\d|\s)|$))";
 
             string pattern_if_fail = @"((^=|\n=)=(\w|\d|\s).*?==(.|\n|\*)*)";
             string error_msg = String.Format("There was an issue parsing the match collection{0}",
                                                  "The problem was with Regex_Parse_Headers_And_Nodes()");
-            Regex regex = new Regex(""); //To be redefined at each step
+            Regex regex = new Regex(pattern); //To be redefined at each step
 
             //Get the header
-            Match m = Regex.Match(input, pattern);
+            Match m = regex.Match(input);
             Match m_if_fail = Regex.Match(input, pattern_if_fail);
 
             if (m.Success)
@@ -392,13 +329,6 @@ namespace Wikipedia_Fluent.Models
                 //Creating the header
                 output = m.Value;
                 regex = new Regex(pattern);
-            } 
-            else if (m_if_fail.Success)
-            {
-
-                //Creating the header
-                output = m_if_fail.Value;
-                regex = new Regex(pattern_if_fail);
             } 
             else
             {
@@ -429,7 +359,7 @@ namespace Wikipedia_Fluent.Models
             string output;
 
             string pattern = @"(^===|\n===)(\w|\d|\s).*?===(.|\n|\*)*?(?=(^==|\n==))";
-            string pattern_if_fail = @"((^==|\n==)=(\w|\d|\s).*?==(.|\n|\*)*(!?(=|\n=|^=)))";
+            string pattern_if_fail = @"((^==|\n==)=(\w|\d|\s).*?==(.|\n|\*)*(!?(\n=|^=|$)))";
             string error_msg = String.Format("There was an issue parsing the match collection{0}",
                                                  "The problem was with Regex_Parse_Headers_And_Nodes()");
             Regex regex = new Regex(""); //To be redefined at each step
@@ -471,10 +401,6 @@ namespace Wikipedia_Fluent.Models
 
             return output;
         }
-
-
-
-///////BREAK IN CLASS FOR WIKICONTENT_ROOT OBJECT/////////////////////////////////////
     }
 
         public class Introduction
