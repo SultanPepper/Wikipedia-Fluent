@@ -21,6 +21,8 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows;
 using System.ComponentModel;
+using Windows.UI.ViewManagement;
+using Windows.ApplicationModel.Core;
 
 
 
@@ -42,9 +44,14 @@ namespace Wikipedia_Fluent
         {
             this.InitializeComponent();
             backbtn.Visibility = Visibility.Visible;
-            //PageTitle_Textblock.Visibility = Visibility.Collapsed;
+
             forwardbtn.Foreground = new SolidColorBrush(Windows.UI.Colors.DimGray);
-            //forwardbtn.Visibility = Visibility.Collapsed;
+
+            ApplicationViewTitleBar formattedTitleBar = ApplicationView.GetForCurrentView().TitleBar;
+            formattedTitleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
+            CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+
             ContentFrame.Navigate(typeof(HomePage));
 
             
@@ -108,5 +115,9 @@ namespace Wikipedia_Fluent
 
         }
 
+        private void splitviewPane_LostFocus(object sender, RoutedEventArgs e)
+        {
+            mySplitView.IsPaneOpen = false;
+        }
     }       
 }

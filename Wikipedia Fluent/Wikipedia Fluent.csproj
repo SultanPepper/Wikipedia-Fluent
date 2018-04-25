@@ -105,7 +105,9 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\DataBinding.cs" />
+    <Compile Include="Models\Httpclient.cs" />
     <Compile Include="Models\ParseWikiText.cs" />
+    <Compile Include="Models\SuggestBox.cs" />
     <Compile Include="Models\WikiAPINavigator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsPage.xaml.cs">
@@ -205,6 +207,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.8</Version>
+    </PackageReference>
+    <PackageReference Include="MyToolkit.Extended">
+      <Version>2.5.16</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>

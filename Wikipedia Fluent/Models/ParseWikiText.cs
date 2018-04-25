@@ -27,15 +27,16 @@ namespace Wikipedia_Fluent.Models
     {
         public string PageTitle { get; set; }
         public string RemainingContent { get; set; }
-        public Introduction introduction { get; set; }
-        public List<Node_1> node_1 { get; set; }
+        public string[] imagenames { get; set; }
+        public Introduction Introduction { get; set; }
+        public List<Node_1> Node_1_list { get; set; }
+        public List<string> imageurlsTEMP { get; set; }
 
 
         //Http methods
-        public string GetURL(string SearchQuery)
+        public string GetContentURL(string SearchQuery)
         {
             string searchquery = SearchQuery;
-
 
             string scheme = "https://";
             StringBuilder sb_URL = new StringBuilder(scheme);
@@ -82,7 +83,7 @@ namespace Wikipedia_Fluent.Models
         {
             HttpClient http = new HttpClient();
             string searchquery = SearchQuery;
-            string URL = GetURL(searchquery);
+            string URL = GetContentURL(searchquery);
 
             var response = await http.GetAsync(URL);
             var result = await response.Content.ReadAsStringAsync();
@@ -90,6 +91,15 @@ namespace Wikipedia_Fluent.Models
 
             return data;
         }
+
+        //Image methods       
+        
+       
+        //For calling data from server, get to this later!
+
+
+
+
 
 
         //Parsing data methods
@@ -101,21 +111,44 @@ namespace Wikipedia_Fluent.Models
         }
         public string GetIntroTablesAndData(string Input)
         {
+
+
             string input = Input;
-            string pattern = @"^{{(.|\n)*?\n}}(?=\n''')";
-            string errorMsg = "There was difficulty extracting the data tables";
-            int group = 1;
+            string pattern = @"^{{1,2}(.|\n)*?}}(?=\n\n''')";
+
+            StringBuilder errormsg = new StringBuilder();
+            errormsg.Append("There was difficulty extracting the intro data tables");
+            errormsg.Append(Environment.NewLine);
+            errormsg.Append("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            errormsg.Append(Environment.NewLine);
+            errormsg.Append(input);
+            errormsg.Append("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            errormsg.Append(Environment.NewLine);
+            string errorMsg = errormsg.ToString();
+
+            int group = 0;
             string IntroTablesAndData = Regex_SelectMatch(input, pattern, group, errorMsg);
             return IntroTablesAndData;
 
         }
         public string GetIntroContent(string Input)
         {
-            string input = Input;           
-            string pattern = @"(\\n|^)'''(.|\n)*?(?=\n==(\w|\d))";
-            string errorMsg = "There was difficulty extracting the data tables";
-            int group = 0;
 
+
+            string input = Input;
+            string pattern = @"(?<=\n)'''(.|\n)+?(?=\n==(\w|\d|\s))";
+
+            StringBuilder errormsg = new StringBuilder();
+            errormsg.Append("There was difficulty extracting the intro content");
+            errormsg.Append(Environment.NewLine);
+            errormsg.Append("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            errormsg.Append(Environment.NewLine);
+            errormsg.Append(input);
+            errormsg.Append("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            errormsg.Append(Environment.NewLine);
+            string errorMsg = errormsg.ToString();
+
+            int group = 0;
             string IntroContent = Regex_SelectMatch(input, pattern, group, errorMsg);
             return IntroContent;
         }
@@ -172,7 +205,7 @@ namespace Wikipedia_Fluent.Models
         }
         public string[] Regex_Put_N1_AndDerivativesToArray(string Input)
         {
-            string input = Input;          
+            string input = Input;
             string pattern = @"(^|\n)==(\s|\w|\d)+?==(\n|.)+?(?=\n==(\w|\d|\s)|$)";
 
             string[] output = Regex.Matches(input, pattern).OfType<Match>().Select(m => m.Value).ToArray();
@@ -181,7 +214,7 @@ namespace Wikipedia_Fluent.Models
 
         public string[] Regex_Put_N2_AndDerivativesToArray(string Input)
         {
-            string input = Input;           
+            string input = Input;
             string pattern = @"((^==|\n==)=(\w|\d|\s).*?==(.|\n|\*)*?(?=(^={2,3}(\w|\d|\s)|\n={2,3}(\w|\d|\s)|$)))";
             int group_selected = 0;
 
@@ -210,7 +243,7 @@ namespace Wikipedia_Fluent.Models
         {
             string input = Input;
 
-            
+
 
 
             string pattern = @"((^==|\n==)=(\w|\d|\s).*?==(.|\n|\*)*?(?=(^={3,5}(\w|\d|\s)|\n={3,5}(\w|\d|\s)|$)))";
@@ -276,16 +309,13 @@ namespace Wikipedia_Fluent.Models
             if (m.Success)
             {
                 first_match = m.Value;
-            }
-            else
+            } else
             {
                 Match m_if_fail = Regex.Match(input, pattern_if_fail);
                 if (m_if_fail.Success)
                 {
                     first_match = m_if_fail.Value;
-                }
-
-                else
+                } else
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.Append(Environment.NewLine);
@@ -304,13 +334,13 @@ namespace Wikipedia_Fluent.Models
 
                     first_match = sb.ToString();
                 }
-                  
+
             }
 
             return first_match;
 
         }
-    
+
         ///Extract Header information
         public string Regex_Get_N1_ContentAndTitle(string Input)
         {
@@ -333,8 +363,7 @@ namespace Wikipedia_Fluent.Models
                 //Creating the header
                 output = m.Value;
                 regex = new Regex(pattern);
-            } 
-            else
+            } else
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(Environment.NewLine);
@@ -399,8 +428,7 @@ namespace Wikipedia_Fluent.Models
             if (m.Success)
             {
                 output = m.Value;
-            }
-            else
+            } else
             {
                 output = error_msg;
             }
@@ -420,14 +448,13 @@ namespace Wikipedia_Fluent.Models
             Regex regex = new Regex(pattern); //To be redefined at each step
 
             Match m = regex.Match(input);
-           
+
             if (m.Success)
             {
                 //Creating the header
                 output = m.Value;
                 regex = new Regex(pattern);
-            }
-            else
+            } else
             {
                 return "Issue getting subheader and title";
             }
@@ -440,7 +467,7 @@ namespace Wikipedia_Fluent.Models
             string input = Input;
             string output;
 
-            string pattern = @"(^===|\n===)(\w|\d|\s).*?==(((.|\n)*?)(?=(\n={4}(\w|\d|\s)|$)))";
+            string pattern = @"(^===|\n===)(\w|\d|\s).*?===(((.|\n)*?)(?=(\n={4}(\w|\d|\s)|$)))";
 
             Regex regex = new Regex(pattern); //To be redefined at each step
 
@@ -535,7 +562,7 @@ namespace Wikipedia_Fluent.Models
             string input = Input;
             string output;
 
-            string pattern = @"((^====|\n====)(\w|\d|\s).+?==(.|\n)*?)(?=(\n={4,5}(\w|\d|\s)|$))";
+            string pattern = @"((^====|\n====)(\w|\d|\s).+?====(.|\n)*?)(?=(\n={4,5}(\w|\d|\s)|$))";
 
             Regex regex = new Regex(pattern); //To be redefined at each step
 
@@ -559,7 +586,7 @@ namespace Wikipedia_Fluent.Models
             string input = Input;
             string output;
 
-            string pattern = @"(^====|\n====)(\w|\d|\s).+?==(((.|\n)*?)(?=(\n={4}(\w|\d|\s)|$)))";
+            string pattern = @"(^====|\n====)(\w|\d|\s).+?====(((.|\n)*?)(?=(\n={4}(\w|\d|\s)|$)))";
 
             Regex regex = new Regex(pattern); //To be redefined at each step
 
@@ -605,8 +632,8 @@ namespace Wikipedia_Fluent.Models
         {
             string input = Input;
             string output;
-            
-            string pattern = @"((^=====|\n=====)(\w|\d|\s).+?==(.|\n)*?)(?=(\n={5}(\w|\d|\s)|$))";
+
+            string pattern = @"((^=====|\n=====)(\w|\d|\s).+?=====(.|\n)*?)(?=(\n={5}(\w|\d|\s)|$))";
 
             Regex regex = new Regex(pattern); //To be redefined at each step
 
@@ -630,7 +657,7 @@ namespace Wikipedia_Fluent.Models
             string input = Input;
             string output;
 
-            string pattern = @"(^=====|\n=====)(\w|\d|\s).+?==(((.|\n)*?)(?=(\n={4}(\w|\d|\s)|$)))";
+            string pattern = @"(^=====|\n=====)(\w|\d|\s).+?=====(((.|\n)*?)(?=(\n={4}(\w|\d|\s)|$)))";
 
             Regex regex = new Regex(pattern); //To be redefined at each step
 
@@ -673,52 +700,87 @@ namespace Wikipedia_Fluent.Models
 
     }
 
-        public class Introduction
-        {     
-            public string Content { get; set; }
-            public string DataTable { get; set; }
-            public List<String> References { get; set; }
-            public List<String> Images { get; set; }
-        }
-        public class Node_1
+    public class Introduction
     {
-            public string Title { get; set; }
-            public string Content { get; set; }
-            public string Tables { get; set; }
-            public List<String> References { get; set; }
-            public List<String> Images { get; set; }
-            public List<Node_2> node_2 { get; set; }
-        }
-        public class Node_2
-    {
-            public string Title { get; set; }
-            public string Content { get; set; }
-            public string Table { get; set; }
-            public List<String> References { get; set; }
-            public List<String> Images { get; set; }
-            public List<Node_3> node_3 { get; set; }
-        }
-        public class Node_3
-    {
-        public string Title { get; set; }
         public string Content { get; set; }
-        public string Table { get; set; }
+        public string DataTable { get; set; }
+        public string[] imagenames { get; set; }
         public List<String> References { get; set; }
-        public List<String> Images { get; set; }
-        public List<Node_4> node_4 { get; set; }
-        }
-
-        public class Node_4
+        public List<ParsedImageInfo> ParsedImage_list { get; set; }
+    }
+    public class Node_1
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public string Tables { get; set; }
+        public List<String> References { get; set; }
+        public string[] imagenames { get; set; }
+        public List<ParsedImageInfo> ParsedImage_list { get; set; }
+        public List<Node_2> Node_2_list { get; set; }
+    }
+    public class Node_2
     {
         public string Title { get; set; }
         public string Content { get; set; }
         public string Table { get; set; }
-        public List<String> s3_References { get; set; }
-        public List<String> s3_Images { get; set; }
-        }
+        public List<String> References_List { get; set; }
+        public string[] imagenames { get; set; }
+        public List<ParsedImageInfo> ParsedImage_list { get; set; }
+        public List<Node_3> Node_3_list { get; set; }
+    }
+    public class Node_3
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public string Table { get; set; }
+        public List<String> References_List { get; set; }
+        public string[] imagenames { get; set; }
+        public List<ParsedImageInfo> ParsedImage_list { get; set; }
+        public List<Node_4> Node_4_list { get; set; }
+    }
+
+    public class Node_4
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public string Table { get; set; }
+        public List<String> References_List { get; set; }
+        public string[] imagenames { get; set; }
+        public List<ParsedImageInfo> ParsedImage_list { get; set; }
+    }
+
+    public class ParsedImageInfo
+    {
+
+        public string URL { get; set; }
+        public string ThumbURL { get; set; }
+        public int ThumbHeight { get; set; }
+        public int ThumbWidth { get; set; }
+        public string DescriptionURL { get; set; }
+        public float Upright_Equal { get; set; }
+        public int Size { get; set; }
+        public int Height { get; set; }
+        public int Width { get; set; }
+        public string Mediatype { get; set; }
+        public string ParsedComment { get; set; }
+        public string CanonicalTitle { get; set; }
+        //From Regex of page content, not image content
+        public string Filename { get; set; }
+        public bool Thumb { get; set; }
+        public string AssociatedWikiPageName { get; set; }
+        public string ImageDescription { get; set; }
+        public double UprightDimensions { get; set; }
+
+
+
+
+        //Documentation is here
+        //https://www.mediawiki.org/wiki/API:Imageinfo
+    }
+
+
+
 }
-
-
 
 
 

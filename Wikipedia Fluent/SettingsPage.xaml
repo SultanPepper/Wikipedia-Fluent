@@ -29,10 +29,9 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-
         <RelativePanel
                 Name="settingsStackPanel"
                 Grid.Row="0"
@@ -54,7 +53,7 @@
                           Header="Simple Wikipedia"
                           RelativePanel.AlignLeftWithPanel="True"
                           RelativePanel.Below="SettingsTextBlock"
-                          FontSize="24"
+                          FontSize="18"
                           HorizontalAlignment="Center"
                           OnContent="Use simple Wikipedia"
                           OffContent="Use standard Wikipedia"
@@ -76,7 +75,7 @@
             </VisualState>
             <VisualState x:Name="Layout_2">
                 <VisualState.StateTriggers>
-                    <AdaptiveTrigger MinWindowWidth="800"/>
+                    <AdaptiveTrigger MinWindowWidth="675"/>
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
                     <!-- Simple Wikipedia Toggle-->

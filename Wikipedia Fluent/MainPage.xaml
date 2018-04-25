@@ -12,7 +12,7 @@
 
 
 
-    <Grid RequestedTheme="Light" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid RequestedTheme="Light" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" MinHeight="600" MinWidth="400">
     
         
         <Grid.RowDefinitions>
@@ -31,7 +31,9 @@
                    PaneClosing="mySplitView_PaneIsClosing">
 
             <SplitView.Pane>
-                <RelativePanel Name="splitviewPane" Margin="0,0,0,0">
+                <RelativePanel Name="splitviewPane"
+                               Margin="0,0,0,0"
+                               LostFocus="splitviewPane_LostFocus">
                     <Button Name="hamburgerbtn"
                         RelativePanel.AlignTopWithPanel="True"
                         Style="{ThemeResource ButtonRevealStyle}"
@@ -42,8 +44,7 @@
                         FontWeight="Normal"
                         FontSize="34"
                         Width="70"
-                        Height="70"
-                        
+                        Height="70"                       
                         Content="&#xE700;"/>
                     
                     <Button x:Name="homebtn"
@@ -144,7 +145,7 @@
                            RelativePanel.AlignLeftWithPanel="True"
                            RelativePanel.AlignRightWithPanel="True"
                            RelativePanel.AlignBottomWithPanel="True"
-                           Margin="2,0,2,2">
+                           Margin="0,0,0,0">
                     </Frame>
                 </RelativePanel>
             </SplitView.Content>
@@ -157,76 +158,70 @@
                         <AdaptiveTrigger MinWindowWidth="0"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <!--Hamburger Button-->
+                        <Setter Target="hamburgerbtn.Width" Value="70"/>
+                        <Setter Target="hamburgerbtn.Height" Value="75"/>
+                        <Setter Target="hamburgerbtn.FontSize" Value="24"/>
+                        <Setter Target="hamburgerbtn.Margin" Value="0,0,0,0"/>
+                        <!--Home Button-->
+                        <Setter Target="homebtn.Width" Value="70"/>
+                        <Setter Target="homebtn.Height" Value="75"/>
+                        <Setter Target="homebtn.FontSize" Value="24"/>
+                        <!--Settings Button-->
+                        <Setter Target="settingsbtn.Width" Value="70"/>
+                        <Setter Target="settingsbtn.Height" Value="75"/>
+                        <Setter Target="settingsbtn.FontSize" Value="24"/>
+                        <!--Back Button-->
+                        <Setter Target="backbtn.Width" Value="140"/>                                    
+                        <Setter Target="backbtn.Height" Value="75"/>
+                        <Setter Target="backbtn.FontSize" Value="24"/>
+                        <Setter Target="backbtn.Margin" Value="0,0,15,0"/>
                         <!--Replace hamburger menu-->
                         <Setter Target="splitviewtogglebtn.Visibility" Value="Visible"/>
                         <Setter Target="splitviewtogglebtn.Width" Value="100"/>
-                        <Setter Target="splitviewtogglebtn.Height" Value="60"/>
-                        <Setter Target="splitviewtogglebtn.FontSize" Value="25"/>
-                        <Setter Target="splitviewtogglebtn.Margin" Value="10,0,10,0"/>
-                        <!--Hamburger Button-->
-                        <Setter Target="hamburgerbtn.Width" Value="60"/>
-                        <Setter Target="hamburgerbtn.Height" Value="60"/>
-                        <Setter Target="hamburgerbtn.FontSize" Value="25"/>
-                        <!--Home Button-->
-                        <Setter Target="homebtn.Width" Value="60"/>
-                        <Setter Target="homebtn.Height" Value="60"/>
-                        <Setter Target="homebtn.FontSize" Value="25"/>
-                        <!--Settings Button-->
-                        <Setter Target="settingsbtn.Width" Value="60"/>
-                        <Setter Target="settingsbtn.Height" Value="60"/>
-                        <Setter Target="settingsbtn.FontSize" Value="25"/>
-                        <!--Page Title
-                        <Setter Target="PageTitle.Visibility" Value="Collapsed"/>-->
-                        <!--Back Button-->
-                        <Setter Target="backbtn.Width" Value="100"/>
-                        <Setter Target="backbtn.Height" Value="60"/>
-                        <Setter Target="backbtn.FontSize" Value="25"/>
-                        <Setter Target="backbtn.Margin" Value="0,0,5,0"/>
+                        <Setter Target="splitviewtogglebtn.Height" Value="75"/>
+                        <Setter Target="splitviewtogglebtn.FontSize" Value="24"/>
+                        <Setter Target="splitviewtogglebtn.Margin" Value="15, 0, 15,0"/>
                         <!--Forward button-->
-                        <Setter Target="forwardbtn.Width" Value="100"/>
-                        <Setter Target="forwardbtn.Height" Value="60"/>
-                        <Setter Target="forwardbtn.FontSize" Value="25"/>
-                        <Setter Target="forwardbtn.Margin" Value="5,0,0,0"/>
+                        <Setter Target="forwardbtn.Width" Value="140"/>
+                        <Setter Target="forwardbtn.Height" Value="75"/>
+                        <Setter Target="forwardbtn.FontSize" Value="24"/>
+                        <Setter Target="forwardbtn.Margin" Value="15,0,0,0"/>
                         <!--Split-->
                         <Setter Target="mySplitView.CompactPaneLength" Value="0"/>
-                        <Setter Target="mySplitView.DisplayMode" Value="Overlay"/>
+                        <Setter Target="mySplitView.DisplayMode" Value="CompactInline"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Layout_2">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="800"/>
+                        <AdaptiveTrigger MinWindowWidth="675"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!-- Replace hamburger menu-->
-                        <Setter Target="splitviewtogglebtn.Visibility" Value="Collapsed"/>
                         <!-- Hamburger Button-->
                         <Setter Target="hamburgerbtn.Width" Value="60"/>
-                        <Setter Target="hamburgerbtn.Height" Value="60"/>
-                        <Setter Target="hamburgerbtn.FontSize" Value="28"/>
+                        <Setter Target="hamburgerbtn.Height" Value="75"/>
+                        <Setter Target="hamburgerbtn.FontSize" Value="24"/>
+                        <Setter Target="hamburgerbtn.Margin" Value="0,0,0,0"/>
                         <!--Home Button-->
                         <Setter Target="homebtn.Width" Value="60"/>
-                        <Setter Target="homebtn.Height" Value="60"/>
-                        <Setter Target="homebtn.FontSize" Value="28"/>
+                        <Setter Target="homebtn.Height" Value="75"/>
+                        <Setter Target="homebtn.FontSize" Value="24"/>
                         <!-- Settings Button -->
                         <Setter Target="settingsbtn.Width" Value="60"/>
-                        <Setter Target="settingsbtn.Height" Value="60"/>
-                        <Setter Target="settingsbtn.FontSize" Value="28"/>
-                        <!--Page Title
-                        <Setter Target="PageTitle.Visibility" Value="Visible"/>
-                        <Setter Target="PageTitle.Width" Value="120"/>
-                        <Setter Target="PageTitle.Height" Value="60"/>
-                        <Setter Target="PageTitle.FontSize" Value="28"/>
-                        <Setter Target="PageTitle.Margin" Value="5,0,5,0"/>-->
+                        <Setter Target="settingsbtn.Height" Value="75"/>
+                        <Setter Target="settingsbtn.FontSize" Value="24"/>
                         <!-- Back Button -->
-                        <Setter Target="backbtn.Width" Value="120"/>
-                        <Setter Target="backbtn.Height" Value="60"/>
-                        <Setter Target="backbtn.FontSize" Value="28"/>
-                        <Setter Target="backbtn.Margin" Value="0,0,5,5"/>
+                        <Setter Target="backbtn.Width" Value="155"/>
+                        <Setter Target="backbtn.Height" Value="75"/>
+                        <Setter Target="backbtn.FontSize" Value="24"/>
+                        <Setter Target="backbtn.Margin" Value="0,0,25,0"/>
+                        <!-- Replace hamburger menu-->
+                        <Setter Target="splitviewtogglebtn.Visibility" Value="Collapsed"/>
                         <!-- Forward button -->
-                        <Setter Target="forwardbtn.Width" Value="120"/>
-                        <Setter Target="forwardbtn.Height" Value="60"/>
-                        <Setter Target="forwardbtn.FontSize" Value="28"/>
-                        <Setter Target="forwardbtn.Margin" Value="5,0,0,5"/>
+                        <Setter Target="forwardbtn.Width" Value="155"/>
+                        <Setter Target="forwardbtn.Height" Value="75"/>
+                        <Setter Target="forwardbtn.FontSize" Value="24"/>
+                        <Setter Target="forwardbtn.Margin" Value="25,0,0,0"/>
                         <!-- Pane -->
                         <Setter Target="mySplitView.CompactPaneLength" Value="60"/>
                         <Setter Target="mySplitView.DisplayMode" Value="CompactInline"/>
@@ -237,38 +232,33 @@
                         <AdaptiveTrigger MinWindowWidth="1400"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <!-- Hamburger Button-->
+                        <Setter Target="hamburgerbtn.Width" Value="60"/>
+                        <Setter Target="hamburgerbtn.Height" Value="75"/>
+                        <Setter Target="hamburgerbtn.FontSize" Value="24"/>
+                        <Setter Target="hamburgerbtn.Margin" Value="0,0,0,0"/>
+                        <!--Home Button-->
+                        <Setter Target="homebtn.Width" Value="60"/>
+                        <Setter Target="homebtn.Height" Value="75"/>
+                        <Setter Target="homebtn.FontSize" Value="24"/>
+                        <!-- Settings Button -->
+                        <Setter Target="settingsbtn.Width" Value="60"/>
+                        <Setter Target="settingsbtn.Height" Value="75"/>
+                        <Setter Target="settingsbtn.FontSize" Value="24"/>
+                        <!-- Back Button -->
+                        <Setter Target="backbtn.Width" Value="165"/>
+                        <Setter Target="backbtn.Height" Value="75"/>
+                        <Setter Target="backbtn.FontSize" Value="24"/>
+                        <Setter Target="backbtn.Margin" Value="0,0,25,0"/>
                         <!-- Replace hamburger menu-->
                         <Setter Target="splitviewtogglebtn.Visibility" Value="Collapsed"/>
-                        <!-- Hamburger Button-->
-                        <Setter Target="hamburgerbtn.Width" Value="70"/>
-                        <Setter Target="hamburgerbtn.Height" Value="70"/>
-                        <Setter Target="hamburgerbtn.FontSize" Value="28"/>
-                        <!--Home Button-->
-                        <Setter Target="homebtn.Width" Value="70"/>
-                        <Setter Target="homebtn.Height" Value="70"/>
-                        <Setter Target="homebtn.FontSize" Value="28"/>
-                        <!-- Settings Button -->
-                        <Setter Target="settingsbtn.Width" Value="70"/>
-                        <Setter Target="settingsbtn.Height" Value="70"/>
-                        <!--Page Title
-                        <Setter Target="PageTitle.Visibility" Value="Visible"/>
-                        <Setter Target="PageTitle.Width" Value="140"/>
-                        <Setter Target="PageTitle.Height" Value="70"/>
-                        <Setter Target="PageTitle.FontSize" Value="28"/>
-                        <Setter Target="PageTitle.Margin" Value="5,0,5,0"/>
-                        <Setter Target="settingsbtn.FontSize" Value="28"/>-->
-                        <!-- Back Button -->
-                        <Setter Target="backbtn.Width" Value="140"/>
-                        <Setter Target="backbtn.Height" Value="70"/>
-                        <Setter Target="backbtn.FontSize" Value="28"/>
-                        <Setter Target="backbtn.Margin" Value="0,0,5,5"/>
                         <!-- Forward button -->
-                        <Setter Target="forwardbtn.Width" Value="140"/>
-                        <Setter Target="forwardbtn.Height" Value="70"/>
-                        <Setter Target="forwardbtn.FontSize" Value="28"/>
-                        <Setter Target="forwardbtn.Margin" Value="5,0,0,5"/>
+                        <Setter Target="forwardbtn.Width" Value="165"/>
+                        <Setter Target="forwardbtn.Height" Value="75"/>
+                        <Setter Target="forwardbtn.FontSize" Value="24"/>
+                        <Setter Target="forwardbtn.Margin" Value="25,0,0,0"/>
                         <!-- Pane -->
-                        <Setter Target="mySplitView.CompactPaneLength" Value="70"/>
+                        <Setter Target="mySplitView.CompactPaneLength" Value="60"/>
                         <Setter Target="mySplitView.DisplayMode" Value="CompactInline"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -277,40 +267,34 @@
                         <AdaptiveTrigger MinWindowWidth="1800"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <!-- Hamburger Button-->
+                        <Setter Target="hamburgerbtn.Width" Value="65"/>
+                        <Setter Target="hamburgerbtn.Height" Value="75"/>
+                        <Setter Target="hamburgerbtn.FontSize" Value="24"/>
+                        <Setter Target="hamburgerbtn.Margin" Value="0,0,0,0"/>
+                        <!--Home Button-->
+                        <Setter Target="homebtn.Width" Value="65"/>
+                        <Setter Target="homebtn.Height" Value="75"/>
+                        <Setter Target="homebtn.FontSize" Value="24"/>
+                        <!-- Settings Button -->
+                        <Setter Target="settingsbtn.Width" Value="65"/>
+                        <Setter Target="settingsbtn.Height" Value="75"/>
+                        <Setter Target="settingsbtn.FontSize" Value="24"/>
+                        <!-- Back Button -->
+                        <Setter Target="backbtn.Width" Value="175"/>
+                        <Setter Target="backbtn.Height" Value="75"/>
+                        <Setter Target="backbtn.FontSize" Value="24"/>
+                        <Setter Target="backbtn.Margin" Value="0,0,25,0"/>
                         <!-- Replace hamburger menu-->
                         <Setter Target="splitviewtogglebtn.Visibility" Value="Collapsed"/>
-                        <!-- Hamburger Button-->
-                        <Setter Target="hamburgerbtn.Width" Value="70"/>
-                        <Setter Target="hamburgerbtn.Height" Value="70"/>
-                        <Setter Target="hamburgerbtn.FontSize" Value="30"/>
-                        <!--Home Button-->
-                        <Setter Target="homebtn.Width" Value="70"/>
-                        <Setter Target="homebtn.Height" Value="70"/>
-                        <Setter Target="homebtn.FontSize" Value="30"/>
-                        <!-- Settings Button -->
-                        <Setter Target="settingsbtn.Width" Value="70"/>
-                        <Setter Target="settingsbtn.Height" Value="70"/>
-                        <Setter Target="settingsbtn.FontSize" Value="30"/>
-                        <!--Page Title
-                        <Setter Target="PageTitle.Visibility" Value="Visible"/>
-                        <Setter Target="PageTitle.Width" Value="140"/>
-                        <Setter Target="PageTitle.Height" Value="70"/>
-                        <Setter Target="PageTitle.FontSize" Value="30"/>
-                        <Setter Target="PageTitle.Margin" Value="5,0,5,0"/>-->
-                        <!-- Back Button -->
-                        <Setter Target="backbtn.Width" Value="140"/>
-                        <Setter Target="backbtn.Height" Value="70"/>
-                        <Setter Target="backbtn.FontSize" Value="30"/>
-                        <Setter Target="backbtn.Margin" Value="0,0,5,5"/>
                         <!-- Forward button -->
-                        <Setter Target="forwardbtn.Width" Value="140"/>
-                        <Setter Target="forwardbtn.Height" Value="70"/>
-                        <Setter Target="forwardbtn.FontSize" Value="30"/>
-                        <Setter Target="forwardbtn.Margin" Value="5,0,0,5"/>
+                        <Setter Target="forwardbtn.Width" Value="175"/>
+                        <Setter Target="forwardbtn.Height" Value="75"/>
+                        <Setter Target="forwardbtn.FontSize" Value="24"/>
+                        <Setter Target="forwardbtn.Margin" Value="25,0,0,0"/>
                         <!-- Pane lengths-->
-                        <Setter Target="mySplitView.CompactPaneLength" Value="70"/>
+                        <Setter Target="mySplitView.CompactPaneLength" Value="65"/>
                         <Setter Target="mySplitView.DisplayMode" Value="CompactInline"/>
-
                     </VisualState.Setters>
 
                 </VisualState>

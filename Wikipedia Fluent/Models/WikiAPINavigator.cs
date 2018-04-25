@@ -21,7 +21,7 @@ namespace Wikipedia_Fluent.Models
         [DataMember]
         public bool batchcomplete { get; set; }
         [DataMember]
-        public Query2 query { get; set; }
+        public Query query { get; set; }
         [DataMember]
         public Parse parse { get; set; }
     }
@@ -57,7 +57,8 @@ namespace Wikipedia_Fluent.Models
         [DataMember]
         public object[] parsewarnings { get; set; }
         [DataMember]
-        public string displaytitle { get; set; }
+        public string 
+            le { get; set; }
         [DataMember]
         public List<object> iwlinks { get; set; }
         [DataMember]
@@ -85,7 +86,6 @@ namespace Wikipedia_Fluent.Models
         [DataMember]
         public string invalidname_dunnosignif { get; set; }
     }
-
             [DataContract]
             public class Link
     {
@@ -96,7 +96,6 @@ namespace Wikipedia_Fluent.Models
         [DataMember]
         public string invalidname_dunnosignif { get; set; }
     }
-
             [DataContract]
             public class Template
     {
@@ -107,7 +106,6 @@ namespace Wikipedia_Fluent.Models
         [DataMember]
         public string invalidname_dunnosignif { get; set; }
     }
-
             [DataContract]
             public class Section
     {
@@ -142,15 +140,18 @@ namespace Wikipedia_Fluent.Models
 
 
     [DataContract]
-    public class Query2
+    public class Query
     {
         [DataMember]
         public List<Normalized> normalized { get; set; }
         [DataMember]
         public List<WikiPage> pages { get; set; }
+        [DataMember]
+        public List<Prefixsearch> prefixsearch { get; set; }
+
     }
 
-        [DataContract]
+    [DataContract]
         public class Normalized
     {
         [DataMember]
@@ -171,13 +172,54 @@ namespace Wikipedia_Fluent.Models
         [DataMember]
         public string title { get; set; }
         [DataMember]
-        public List<Image> images { get; set; }
+        public bool missing { get; set; }
+        [DataMember]
+        public bool known { get; set; }
+        [DataMember]
+        public List<WikiImage> images { get; set; }
         [DataMember]
         public List<Revision> revisions { get; set; }
+        [DataMember]
+        public string imagerepository { get; set; }
+        [DataMember]
+        public List<Imageinfo> imageinfo { get; set; }
     }
 
             [DataContract]
-            public class Image
+            public class Imageinfo
+    {
+            [DataMember]
+            public DateTime timestamp { get; set; }
+            [DataMember]
+            public string user { get; set; }
+            [DataMember]
+            public int size { get; set; }
+            [DataMember]
+            public int width { get; set; }
+            [DataMember]
+            public int height { get; set; }
+            [DataMember]
+            public int thumbwidth { get; set; }
+            [DataMember]
+            public int thumbheight { get; set; }
+            [DataMember]
+            public string parsedcomment { get; set; }
+            [DataMember]
+            public string canonicaltitle { get; set; }
+            [DataMember]
+            public string url { get; set; }
+            [DataMember]
+            public string thumburl { get; set; }
+            [DataMember]
+            public string descriptionurl { get; set; }
+            [DataMember]
+            public string descriptionshorturl { get; set; }
+            [DataMember]
+            public string mediatype { get; set; }
+    }
+
+            [DataContract]
+            public class WikiImage
     {
         [DataMember]
         public int ns { get; set; }
@@ -196,7 +238,20 @@ namespace Wikipedia_Fluent.Models
         public string content { get; set; }
     }
 
-        public class WikiPageContentsToPass
+
+    [DataContract]
+    public class Prefixsearch
+    {
+        [DataMember]
+        public int ns { get; set; }
+        [DataMember]
+        public string title { get; set; }
+        [DataMember]
+        public int pageid { get; set; }
+    }
+
+
+    public class WikiPageContentsToPass
     {
         public string PageContent { get; set; }
         public string PageTitle { get; set; }

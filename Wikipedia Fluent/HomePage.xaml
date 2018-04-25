@@ -29,16 +29,32 @@
 
         <Grid x:Name="ImageGrid" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="3">
             <Image Name="WikiLogo"
-               Stretch="Uniform"
+               Stretch="UniformToFill"
                Visibility="Visible"
-               Source="Assets/wikipedia_logo.jpg"/>
+               Source="Assets/wikipedia_logo.jpg"
+               Margin="0,0,0,0"/>
         </Grid>
 
         
-        <Grid x:Name="StackPanelGrid" Grid.Row="4" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="3">
+        <Grid x:Name="StackPanelGrid"
+              Grid.Row="4" 
+              Grid.Column="1" 
+              Grid.RowSpan="3" 
+              Grid.ColumnSpan="3" 
+              VerticalAlignment="Center"
+              Margin="0,0,0,0">
             <StackPanel Name="myStackPanel">
-                
+
+                <Rectangle x:Name="TransparentRectangle"
+                           Fill="Transparent"
+                           Width="5"
+                           Height="75"/>
+
                 <AutoSuggestBox Name="searchQuery"
+                QueryIcon="Find"
+                TextChanged="searchQuery_TextChanged"
+                QuerySubmitted="searchQuery_QuerySubmitted"
+                SuggestionChosen="searchQuery_SuggestionChosen"             
                 PlaceholderText="What are you searching for?"
                 FontSize="24"
                 MaxWidth="550"
@@ -87,12 +103,14 @@
                         <AdaptiveTrigger MinWindowWidth="0"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <!-- Placeholder rectangle-->
+                        <Setter Target="TransparentRectangle.Height" Value="45"/>
                         <!-- Query textbox-->
                         <Setter Target="searchQuery.FontSize" Value="24"/>
-                        <Setter Target="searchQuery.Margin" Value="40,25,40,10"/>
-                        <Setter Target="searchQuery.MaxWidth" Value="480"/>
+                        <Setter Target="searchQuery.Margin" Value="25,25,40,25"/>
+                        <Setter Target="searchQuery.MaxWidth" Value="430"/>
                         <!-- Submit button-->
-                        <Setter Target="submitbtn.FontSize" Value="18"/>
+                        <Setter Target="submitbtn.FontSize" Value="22"/>
                         <Setter Target="submitbtn.Margin" Value="25,15,25,25"/>
                         <Setter Target="submitbtn.Height" Value="45"/>
                         <Setter Target="submitbtn.Width" Value="120"/>
@@ -117,24 +135,25 @@
                 </VisualState>
                 <VisualState x:Name="Layout_2">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="800"/>
+                        <AdaptiveTrigger MinWindowWidth="675"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <!-- Placeholder rectangle-->
+                        <Setter Target="TransparentRectangle.Height" Value="70"/>
                         <!-- Query button/toggle-->
                         <Setter Target="searchQuery.FontSize" Value="28"/>
-                        <Setter Target="searchQuery.Margin" Value="10,20,10,20"/>
+                        <Setter Target="searchQuery.Margin" Value="0,10,0,15"/>
                         <Setter Target="searchQuery.MaxWidth" Value="1000"/>
                         <!-- Submit button-->
-                        <Setter Target="submitbtn.FontSize" Value="20"/>
+                        <Setter Target="submitbtn.FontSize" Value="22"/>
                         <Setter Target="submitbtn.Margin" Value="5,5,5,5"/>
-                        <Setter Target="submitbtn.Height" Value="50"/>
+                        <Setter Target="submitbtn.Height" Value="45"/>
                         <Setter Target="submitbtn.Width" Value="120"/>
                         <!-- Stack Panel-->
                         <Setter Target="StackPanelGrid.Grid.Row" Value="4"/>
                         <Setter Target="StackPanelGrid.Grid.RowSpan" Value="2"/>
                         <Setter Target="StackPanelGrid.Grid.Column" Value="1"/>
                         <Setter Target="StackPanelGrid.Grid.ColumnSpan" Value="3"/>
-                        <!--<Setter Target="searchQuery.PlaceholderText" Value="Small"/>-->
                         <!-- Wikipedia Logo-->
                         <Setter Target="WikiLogo.Visibility" Value="Visible"/>
                         <Setter Target="ImageGrid.Grid.Row" Value="0"/>
@@ -153,15 +172,17 @@
                         <AdaptiveTrigger MinWindowWidth="1400"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <!-- Placeholder rectangle-->
+                        <Setter Target="TransparentRectangle.Height" Value="85"/>
                         <!-- Query button/toggle-->
                         <Setter Target="searchQuery.FontSize" Value="30"/>
-                        <Setter Target="searchQuery.Margin" Value="10,20,10,20"/>
+                        <Setter Target="searchQuery.Margin" Value="10,10,10,15"/>
                         <Setter Target="searchQuery.MaxWidth" Value="1200"/>
                         <!-- Submit button-->
                         <Setter Target="submitbtn.FontSize" Value="24"/>
                         <Setter Target="submitbtn.Margin" Value="5,5,5,5"/>
-                        <Setter Target="submitbtn.Height" Value="55"/>
-                        <Setter Target="submitbtn.Width" Value="120"/>
+                        <Setter Target="submitbtn.Height" Value="50"/>
+                        <Setter Target="submitbtn.Width" Value="133"/>
                         <!-- Stack Panel-->
                         <Setter Target="StackPanelGrid.Grid.Row" Value="4"/>
                         <Setter Target="StackPanelGrid.Grid.RowSpan" Value="2"/>
@@ -186,15 +207,17 @@
                         <AdaptiveTrigger MinWindowWidth="1800"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <!-- Placeholder rectangle-->
+                        <Setter Target="TransparentRectangle.Height" Value="100"/>
                         <!-- Query button/toggle-->
                         <Setter Target="searchQuery.FontSize" Value="32"/>
-                        <Setter Target="searchQuery.Margin" Value="10,20,10,20"/>
+                        <Setter Target="searchQuery.Margin" Value="10,10,10,15"/>
                         <Setter Target="searchQuery.MaxWidth" Value="1200"/>
                         <!-- Submit button-->
                         <Setter Target="submitbtn.FontSize" Value="24"/>
                         <Setter Target="submitbtn.Margin" Value="5,5,5,5"/>
-                        <Setter Target="submitbtn.Height" Value="60"/>
-                        <Setter Target="submitbtn.Width" Value="120"/>
+                        <Setter Target="submitbtn.Height" Value="50"/>
+                        <Setter Target="submitbtn.Width" Value="133"/>
                         <!-- Stack Panel-->
                         <Setter Target="StackPanelGrid.Grid.Row" Value="4"/>
                         <Setter Target="StackPanelGrid.Grid.RowSpan" Value="2"/>

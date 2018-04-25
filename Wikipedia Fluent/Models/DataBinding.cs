@@ -8,44 +8,35 @@ using System.Threading.Tasks;
 
 namespace Wikipedia_Fluent.Models
 {
+    
+
     public class DataBinding : INotifyPropertyChanged
     {
+        private string pageTitleText;
 
-        public string PageTitleText
-        {
-            get { return _pageTitleText; }
-            set { Set(ref _pageTitleText, value); }
-        }
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
-        private string _pageTitleText;
 
         public DataBinding()
         {
-            PageTitleText = "pagetitle";
+            this.PageTitleText = "Text";
         }
-
-        public static DataBinding CreateTitleText(string titletext)
+        
+        public string PageTitleText
         {
-            return new DataBinding { PageTitleText = titletext };
+            get { return this.pageTitleText; }
+            set
+            {
+                this.pageTitleText = value;
+                this.OnPropertyChanged();
+            }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void RaisePropertyChanged([CallerMemberName]string propertyName = null)
+        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            //? mark here \/ represents to invoke this method if not null
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            // Raise the PropertyChanged event, passing the name of the property whose value has changed.
+            this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        public bool Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
-        {
-            if (Equals(storage, value))
-                return false;
-            storage = value;
-            RaisePropertyChanged(propertyName);
-            return true;
-        }
-
 
 
     }

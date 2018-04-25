@@ -8,6 +8,31 @@
     xmlns:data="using:Wikipedia_Fluent.Models"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <!-- Title(s)-->
+        <Style TargetType="TextBlock" x:Key="textblock_PageTitle">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="FontSize" Value="44" />
+            <Setter Property="TextLineBounds" Value="Full" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontFamily" Value="XamlAutoFontFamily" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextTrimming" Value="None" />
+        </Style>
+
+        <Style TargetType="RichTextBlock" x:Key="richtextblock_PageTitle">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="FontSize" Value="44" />
+            <Setter Property="TextLineBounds" Value="Full" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontFamily" Value="XamlAutoFontFamily" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextTrimming" Value="None" />
+        </Style>
+    </Page.Resources>
+
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
  
@@ -18,29 +43,37 @@
 
         
         <TextBlock Name="pageTitle"
-                   Text= ""
+                   Text= "PageTitle"
                    Grid.Row="0"
-                   TextAlignment="Center"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                   MaxWidth="750"
-                   MaxHeight="250"
-                   FontSize="38"
-                   Style="{ThemeResource TitleTextBlockStyle}"
-                   Margin="10,0,10,0" />
+                   Style="{StaticResource textblock_PageTitle}"
+                   Margin="50,-65,50,0"/>
 
+        <Border Grid.Row="1"
+                x:Name="Border"
+                Background="{ThemeResource SystemControlAccentDark1AcrylicWindowAccentDark1Brush}"
+                BorderBrush="{ThemeResource SystemControlAccentDark1AcrylicElementAccentDark1Brush}" 
+                BorderThickness="2">
 
-        <TextBox Name="pageContent"
-                 Grid.Row="1"
-                 FontSize="14"
-                 TextWrapping="Wrap"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 HorizontalAlignment="Stretch"
-                 VerticalAlignment="Stretch"
-                 Foreground="Black"
-                 Margin="0,0,0,0"/>
+            <ScrollViewer x:Name="ContentScrollViewer"
+                      IsScrollInertiaEnabled="True"
+                      VerticalScrollBarVisibility="Auto"
+                      VerticalScrollMode="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      HorizontalScrollMode="Disabled"
+                      Grid.Row="1"
+                      Margin="0,0,0,0"
+                      Background="WhiteSmoke"
+                      Opacity=".999">
+                
+                <StackPanel x:Name="ContentsStackPanel"
+                            Margin="10,10,10,10">
 
-
+                    <RichTextBlock x:Name="title_rtb">
+                    </RichTextBlock>
+                    
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
 
         <VisualStateManager.VisualStateGroups>
         <VisualStateGroup x:Name="VisualStateGroup_SettingsPage">
@@ -49,17 +82,21 @@
                     <AdaptiveTrigger MinWindowWidth="0"/>
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
-                    <!--<Setter Target="pageTitle.Margin" Value="25,-30,25,10"/>-->
+                    <Setter Target="pageTitle.Margin" Value="25,10,25,10"/>
                     <Setter Target="pageTitle.Visibility" Value="Collapsed"/>
+                    <Setter Target="Border.BorderThickness" Value="1,2,1,1"/>
+                    <Setter Target="title_rtb.Visibility" Value="Visible" />
                 </VisualState.Setters>
             </VisualState>
             <VisualState x:Name="Layout_2">
                 <VisualState.StateTriggers>
-                    <AdaptiveTrigger MinWindowWidth="800"/>
+                    <AdaptiveTrigger MinWindowWidth="675"/>
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
-                    <!--<Setter Target="pageTitle.Margin" Value="25,-30,25,0"/>-->
+                    <Setter Target="pageTitle.Margin" Value="50,-66,50,0"/>
                     <Setter Target="pageTitle.Visibility" Value="Visible"/>
+                    <Setter Target="Border.BorderThickness" Value="1,2,1,1"/>
+                    <Setter Target="title_rtb.Visibility" Value="Collapsed" />
                 </VisualState.Setters>
             </VisualState>
             <VisualState x:Name="Layout_3">
@@ -67,8 +104,10 @@
                     <AdaptiveTrigger MinWindowWidth="1400"/>
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
-                    <!--<Setter Target="pageTitle.Margin" Value="25,-30,25,0"/>-->
+                    <Setter Target="pageTitle.Margin" Value="50,-66,50,0"/>
                     <Setter Target="pageTitle.Visibility" Value="Visible"/>
+                    <Setter Target="Border.BorderThickness" Value="1,2,1,1"/>
+                    <Setter Target="title_rtb.Visibility" Value="Collapsed" />
                 </VisualState.Setters>
             </VisualState>
             <VisualState x:Name="Layout_4">
@@ -76,8 +115,10 @@
                     <AdaptiveTrigger MinWindowWidth="1800"/>
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
-                    <!--<Setter Target="pageTitle.Margin" Value="25,-30,25,0"/>-->
+                    <Setter Target="pageTitle.Margin" Value="50,-66,50,0"/>
                     <Setter Target="pageTitle.Visibility" Value="Visible"/>
+                    <Setter Target="Border.BorderThickness" Value="1,2,1,1"/>
+                    <Setter Target="title_rtb.Visibility" Value="Collapsed" />
                 </VisualState.Setters>
             </VisualState>
         </VisualStateGroup>
