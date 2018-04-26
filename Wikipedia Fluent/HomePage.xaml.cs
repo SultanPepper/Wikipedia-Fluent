@@ -78,86 +78,77 @@ namespace Wikipedia_Fluent
             string data_AsString = data_AsRootObject.parse.wikitext;
 
 
-            //Removes comments 
-            string data_AsStringCut = wikiContent.Regex_DeleteData(data_AsString, "<!--[^Staff](.|\n)*?-->", "");
 
             //Defines page title
             wikiContent.PageTitle = wikiContent.GetPageTitle(data_AsRootObject);
 
             //Adds introduction information into variable
             Introduction introduction = new Introduction();
-            introduction.DataTable = wikiContent.GetIntroTablesAndData(data_AsStringCut); //Gets table data
-            data_AsStringCut = wikiContent.Regex_DeleteData(data_AsStringCut, @"^{{(.|\n)*?\n}}(?=\n''')", ""); //Removes table data
+            introduction.DataTable = wikiContent.GetIntroTablesAndData(data_AsString); //Gets table data
+            data_AsString = wikiContent.Regex_DeleteData(data_AsString, @"^{{(.|\n)*?\n}}(?=\n''')", ""); //Removes table data
 
-            introduction.Content = wikiContent.GetIntroContent(data_AsStringCut); //Gets intro paragraph
-            data_AsStringCut = wikiContent.Regex_DeleteData(data_AsStringCut, @"(\\n|^)'''(.|\n)*?(?=\n==(\w|\d))", ""); //Removes intro paragraph
+            introduction.Content = wikiContent.GetIntroContent(data_AsString); //Gets intro paragraph
+            data_AsString = wikiContent.Regex_DeleteData(data_AsString, @"(\\n|^)'''(.|\n)*?(?=\n==(\w|\d))", ""); //Removes intro paragraph
+
+
+            //Gets intro images
+            string intro_tables_and_content = String.Format("{0}{1}", introduction.DataTable, introduction.Content);
+            List<ParsedImageInfo> intro_imageinfo_list = new List<ParsedImageInfo>();
+            intro_imageinfo_list = GetImageInfoFromContent(intro_tables_and_content);
+
+            //Intro images
+            int intro_imageinfo_count = intro_imageinfo_list.Count;
+            for(int i = 0; i < intro_imageinfo_count; i++)
+            {
+                Rootobject rootobject_image = new Rootobject();
+                string parsedImageName = ParseImageName(intro_imageinfo_list[i].Filename);
+                string imageinfoURL = GetImageInfoURL(parsedImageName);
+                rootobject_image = await GetImageInfoFromAPI(imageinfoURL);
+                SetImageProperties(rootobject_image, intro_imageinfo_list, i);
+            }
+
+            //Remove image text
+            //introduction.Content = wikiContent.Regex_DeleteData(wikiContent.GetIntroContent(data_AsStringCut),
+            //    @"\n?(\[|^\[)\[?File:.*?\[?.*?(\]{2,4}\n|\]{2,4}$)(?=([^\n?\[\[\[?\[?]))", "");
+
+
 
 
             wikiContent.Introduction = introduction;
 
 
             //HEADERS, SUBHEADERS, and SUBSUBHEADERS            
-            string[] n1s_and_derivatives = wikiContent.Regex_Put_N1_AndDerivativesToArray(data_AsStringCut);
+            string[] n1s_and_derivatives = wikiContent.Regex_Put_N1_AndDerivativesToArray(data_AsString);
 
             List<Node_1> N1 = new List<Node_1>(); //NOTE: White space still needs to be formatted
             foreach (string n1_and_derivatives in n1s_and_derivatives)
             {
                 Node_1 n1_iteration = new Node_1();
-                string n1_ContentAndTitle = wikiContent.Regex_Get_N1_ContentAndTitle(n1_and_derivatives); ////// <============== Header PLUS Title
+                string n1_ContentAndTitle = wikiContent.Regex_Get_N1_ContentAndTitle(n1_and_derivatives); ////// <============== N1 Content PLUS Title
 
-                n1_iteration.Title = wikiContent.Regex_Get_N1_Title(n1_and_derivatives); /////////////// <============== Header Title
+                n1_iteration.Title = wikiContent.Regex_Get_N1_Title(n1_and_derivatives); /////////////// <============== N1 Title
 
                 List<ParsedImageInfo> n1_imageinfo_list = new List<ParsedImageInfo>();
                 string n1_iteration_content = wikiContent.Regex_Get_N1_Content(n1_and_derivatives);
                 n1_imageinfo_list = GetImageInfoFromContent(n1_iteration_content); //Get image data
 
+                //N1 images
                 int n1_imageinfo_count = n1_imageinfo_list.Count;
-
                 for (int i = 0; i < n1_imageinfo_count; i++)
                 {
                     Rootobject rootobject_image = new Rootobject();
                     string parsedImageName = ParseImageName(n1_imageinfo_list[i].Filename);
                     string imageinfoURL = GetImageInfoURL(parsedImageName);
                     rootobject_image = await GetImageInfoFromAPI(imageinfoURL);
-
-                    if (String.IsNullOrEmpty(rootobject_image.query.pages[0].imageinfo[0].url))
-                    { }
-                    else
-                    {
-                        string image_DL_URL = rootobject_image.query.pages[0].imageinfo[0].url;                       
-                        int image_size = rootobject_image.query.pages[0].imageinfo[0].size;
-                        int image_height = rootobject_image.query.pages[0].imageinfo[0].height;
-                        int image_width = rootobject_image.query.pages[0].imageinfo[0].width;
-
-                        string image_description_URL = rootobject_image.query.pages[0].imageinfo[0].descriptionurl;
-                        string image_parsed_comment = rootobject_image.query.pages[0].imageinfo[0].parsedcomment;
-                        string media_type = rootobject_image.query.pages[0].imageinfo[0].mediatype;
-                        string canonical_title = rootobject_image.query.pages[0].imageinfo[0].canonicaltitle;
-
-                        string thumb_DL_URL = rootobject_image.query.pages[0].imageinfo[0].thumburl;
-                        int thumb_width = rootobject_image.query.pages[0].imageinfo[0].thumbwidth;
-                        int thumb_height = rootobject_image.query.pages[0].imageinfo[0].thumbheight;
-
-                        n1_imageinfo_list[i].URL = image_DL_URL;
-                        n1_imageinfo_list[i].Size = image_size;
-                        n1_imageinfo_list[i].Height = image_height;
-                        n1_imageinfo_list[i].Width = image_width;
-                        n1_imageinfo_list[i].DescriptionURL = image_description_URL;
-                        n1_imageinfo_list[i].ParsedComment = image_parsed_comment;
-                        n1_imageinfo_list[i].Mediatype = media_type;
-                        n1_imageinfo_list[i].CanonicalTitle = canonical_title;
-                        n1_imageinfo_list[i].ThumbURL = thumb_DL_URL;
-                        n1_imageinfo_list[i].ThumbWidth = thumb_width;
-                        n1_imageinfo_list[i].ThumbHeight = thumb_height;
-                    }
+                    SetImageProperties(rootobject_image, n1_imageinfo_list, 0);
                     
-
                 }
 
                 n1_iteration_content = RemoveImageInfoFromContent(n1_and_derivatives); ////// <============== Header Content (with image data removed!)               
 
-
-                n1_iteration.Content = wikiContent.Regex_Get_N1_Content(n1_and_derivatives); ////// <============== Header Content
+                n1_iteration.Content = wikiContent.Regex_Get_N1_Content(n1_and_derivatives); ////// <============== N1 Content
+                //n1_iteration.Content = wikiContent.Regex_DeleteData(wikiContent.Regex_Get_N1_Content(n1_and_derivatives),
+                //@"\n?(\[|^\[)\[?File:.*?\[?.*?(\]{2,4}\n|\]{2,4}$)(?=([^\n?\[\[\[?\[?]))", ""); 
 
                 //Contains Subheaders and derivatives
                 List<Node_2> N2 = new List<Node_2>();
@@ -169,56 +160,28 @@ namespace Wikipedia_Fluent
                     Node_2 n2_iteration = new Node_2();
                     if (match_n2.Success)
                     {
-                        string n2_ContentAndTitle = wikiContent.Regex_Get_N2_ContentAndTitle(match_n2.Value); ////////// <============== Subheader PLUS Title
+                        string n2_ContentAndTitle = wikiContent.Regex_Get_N2_ContentAndTitle(match_n2.Value); ////////// <============== N2 Content PLUS Title
 
                         List<ParsedImageInfo> n2_imageinfo_list = new List<ParsedImageInfo>();
-                        n2_iteration.Title = wikiContent.Regex_Get_N2_Title(match_n2.Value); //////////////// <============== Subheader Title
-                        n2_iteration.Content = wikiContent.Regex_Get_N2_Content(match_n2.Value); /////// <============== Subheader Content
+                        n2_iteration.Title = wikiContent.Regex_Get_N2_Title(match_n2.Value); //////////////// <============== N2 Title
+
+
+                        //n2_iteration.Content = wikiContent.Regex_DeleteData(wikiContent.Regex_Get_N2_Content(match_n2.Value),
+                        //                                  @"\n?(\[|^\[)\[?File:.*?\[?.*?(\]{2,4}\n|\]{2,4}$)(?=([^\n?\[\[\[?\[?]))", "");
+                        n2_iteration.Content = wikiContent.Regex_Get_N2_Content(match_n2.Value);  /////// <============== N2 Content
 
                         string n2_iteration_content = wikiContent.Regex_Get_N2_Content(match_n2.Value);
                         n2_imageinfo_list = GetImageInfoFromContent(n2_iteration_content); //Get image data
 
+                        //N2 images
                         int n2_imageinfo_count = n2_imageinfo_list.Count;
-
                         for(int i = 0; i < n2_imageinfo_count; i++)
                         {
                             Rootobject rootobject_image = new Rootobject();
                             string parsedImageName = ParseImageName(n2_imageinfo_list[i].Filename);
                             string imageinfoURL = GetImageInfoURL(parsedImageName);
                             rootobject_image = await GetImageInfoFromAPI(imageinfoURL);
-
-                            if(String.IsNullOrEmpty(rootobject_image.query.pages[0].imageinfo[0].url))
-                            { }
-                            else
-                            { 
-
-                            string image_DL_URL = rootobject_image.query.pages[0].imageinfo[0].url;
-                            int image_size = rootobject_image.query.pages[0].imageinfo[0].size;
-                            int image_height = rootobject_image.query.pages[0].imageinfo[0].height;
-                            int image_width = rootobject_image.query.pages[0].imageinfo[0].width;
-
-                            string image_description_URL = rootobject_image.query.pages[0].imageinfo[0].descriptionurl;
-                            string image_parsed_comment = rootobject_image.query.pages[0].imageinfo[0].parsedcomment;
-                            string media_type = rootobject_image.query.pages[0].imageinfo[0].mediatype;
-                            string canonical_title = rootobject_image.query.pages[0].imageinfo[0].canonicaltitle;
-
-                            string thumb_DL_URL = rootobject_image.query.pages[0].imageinfo[0].thumburl;
-                            int thumb_width = rootobject_image.query.pages[0].imageinfo[0].thumbwidth;
-                            int thumb_height = rootobject_image.query.pages[0].imageinfo[0].thumbheight;
-
-
-                            n2_imageinfo_list[i].URL = image_DL_URL;
-                            n2_imageinfo_list[i].Size = image_size;
-                            n2_imageinfo_list[i].Height = image_height;
-                            n2_imageinfo_list[i].Width = image_width;
-                            n2_imageinfo_list[i].DescriptionURL = image_description_URL;
-                            n2_imageinfo_list[i].ParsedComment = image_parsed_comment;
-                            n2_imageinfo_list[i].Mediatype = media_type;
-                            n2_imageinfo_list[i].CanonicalTitle = canonical_title;
-                            n2_imageinfo_list[i].ThumbURL = thumb_DL_URL;
-                            n2_imageinfo_list[i].ThumbWidth = thumb_width;
-                            n2_imageinfo_list[i].ThumbHeight = thumb_height;
-                            }
+                            SetImageProperties(rootobject_image, n2_imageinfo_list, i);
                         }
                         
 
@@ -231,20 +194,58 @@ namespace Wikipedia_Fluent
                             Node_3 n3_iteration = new Node_3();
                             if (match_n3.Success)
                             {
-                                string n3_ContentAndTitle = wikiContent.Regex_Get_N3_ContentAndTitle(match_n3.Value); //////////////////////// <============== SubSubheader PLUS Title
+                                string n3_ContentAndTitle = wikiContent.Regex_Get_N3_ContentAndTitle(match_n3.Value); //////////////////////// <============== N3 Content PLUS Title
 
-                                n3_iteration.Title = wikiContent.Regex_Get_N3_Title(match_n3.Value); ////////////////////////// <============== SubSubheader Title
-                                n3_iteration.Content = wikiContent.Regex_Get_N3_Content(match_n3.Value); ////////////// <============== SubSubheader Content
+
+                                List<ParsedImageInfo> n3_imageinfo_list = new List<ParsedImageInfo>();
+                                n3_imageinfo_list = GetImageInfoFromContent(data_AsString);
+
+                                //N3 images
+                                int n3_imageinfo_count = intro_imageinfo_list.Count;
+                                for(int i = 0; i < intro_imageinfo_count; i++)
+                                {
+                                    Rootobject rootobject_image = new Rootobject();
+                                    string parsedImageName = ParseImageName(intro_imageinfo_list[i].Filename);
+                                    string imageinfoURL = GetImageInfoURL(parsedImageName);
+                                    rootobject_image = await GetImageInfoFromAPI(imageinfoURL);
+                                    SetImageProperties(rootobject_image, n3_imageinfo_list, i);
+                                }
+
+
+                                n3_iteration.Title = wikiContent.Regex_Get_N3_Title(match_n3.Value); ////////////////////////// <============== N3 Title
+                                //n3_iteration.Content = wikiContent.Regex_DeleteData(wikiContent.Regex_Get_N3_Content(match_n3.Value),
+                                //                    @"\n?(\[|^\[)\[?File:.*?\[?.*?(\]{2,4}\n|\]{2,4}$)(?=([^\n?\[\[\[?\[?]))", "");
+                                n3_iteration.Content = wikiContent.Regex_Get_N3_Content(match_n3.Value);        ////////////// <============== N3 Content
 
                                 List<Node_4> N4 = new List<Node_4>();
                                 string[] n4s_and_derivatives = wikiContent.Regex_Put_N4_AndDerivativesToArray(n3_and_derivatives);
                                 foreach (string n4_and_derivatives in n4s_and_derivatives)
                                 {
                                     //And current S3 header to list of S3 headers
-                                    string n4_ContentAndTitle = wikiContent.Regex_Get_N4_ContentAndTitle(n4_and_derivatives); /////////////// <============== SubSubSubheader PLUS Title
+                                    string n4_ContentAndTitle = wikiContent.Regex_Get_N4_ContentAndTitle(n4_and_derivatives); /////////////// <============== N4 COntent PLUS Title
 
-                                    string n4_Title = wikiContent.Regex_Get_N4_Title(n4_and_derivatives); //////////////////// <============== SubSubSubheader Title
-                                    string n4_Content = wikiContent.Regex_Get_N4_Content(n4_and_derivatives); // <============== SubSubSubheader Content
+                                    List<ParsedImageInfo> n4_imageinfo_list = new List<ParsedImageInfo>();
+                                    n3_imageinfo_list = GetImageInfoFromContent(data_AsString);
+
+                                    //N4 images
+                                    int n4_imageinfo_count = intro_imageinfo_list.Count;
+                                    for(int i = 0; i < intro_imageinfo_count; i++)
+                                    {
+                                        Rootobject rootobject_image = new Rootobject();
+                                        string parsedImageName = ParseImageName(intro_imageinfo_list[i].Filename);
+                                        string imageinfoURL = GetImageInfoURL(parsedImageName);
+                                        rootobject_image = await GetImageInfoFromAPI(imageinfoURL);
+                                        SetImageProperties(rootobject_image, n4_imageinfo_list, i);
+                                    }
+
+
+                                    string n4_Title = wikiContent.Regex_Get_N4_Title(n4_and_derivatives); //////////////////// <============== N4 Title
+
+                                    //string n4_Content= wikiContent.Regex_DeleteData(wikiContent.Regex_Get_N4_Content(n4_and_derivatives),
+                                    //                @"(\n\[|^\[)\[?File:.*?\[.*(\]\]{2,4}\n|\]\]{2,4}$)", "");
+                                    string n4_Content = wikiContent.Regex_Get_N4_Content(n4_and_derivatives); ////////////// <============== N4 Content
+
+                                    
 
                                     N4.Add(new Node_4() { Content = n4_Content, Title = n4_Title });
                                 }
@@ -282,95 +283,9 @@ namespace Wikipedia_Fluent
 
 
 
-            wikiContent.PageTitle = wikiContent.GetPageTitle(data_AsRootObject);
-            /*<---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->*/
-            //if (String.IsNullOrEmpty(parametersPassed.node_1[i].images[0].filename))
-            /*
-                        int node_count = wikiContent.Node_1_list.Count;
-                        for (int z = 0; z < node_count; z++)
-                        {
 
-                            if (wikiContent.Node_1_list[z].ParsedImage_list.Count == 0)
-                            {
-                            }
-                            //Don't try to get images
-                            else
-                            {
-                                //get string of image names
-
-                                int img_count = wikiContent.Node_1_list[z].ParsedImage_list.Count;
-
-                                int q = 1;
-                                foreach (ParsedImageInfo imginfo in wikiContent.Node_1_list[z].ParsedImage_list)
-                                {
-                                    //Parsing the title
-                                    string input_img = imginfo.Filename;
-                                    string pattern_img = " ";
-                                    string replacement_img = "_";
-
-
-                                    if (String.IsNullOrEmpty(input_img))
-                                    {
-
-                                    }
-                                    else
-                                    { 
-                                     Regex regex = new Regex(pattern_img);
-                                    string input_parsed = regex.Replace(input_img, replacement_img);
-
-                                    pattern_img = "&";
-                                    replacement_img = "%26";
-                                    regex = new Regex(pattern_img);
-                                    input_parsed = regex.Replace(input_parsed, replacement_img);
-
-                                    if (z == img_count)
-                                    {
-                                        imagenames.StringContent += input_parsed;
-                                    } else
-                                    {
-                                        imagenames.StringContent += input_parsed;
-                                        imagenames.StringContent += "|";
-                                    }
-                                    }
-                                }
-
-                                WikiContent_Rootobject wikicont = new WikiContent_Rootobject();
-                                WikiPage wikipage = new WikiPage();
-                                Rootobject root = new Rootobject();
-
-                                try
-                                {
-
-                                    //Get the URL for the downloads of those images
-                                    string ImagesURL = GetImageInfoURL(imagenames.StringContent);
-                                    var data = await Rootobject.GetImageInfoFromAPI(ImagesURL);
-                                    List<Imageinfo> imageinfolist = new List<Imageinfo>();
-                                    int pagecount = data.query.pages.Count;
-
-                                    for (int j=0; j < pagecount; j++)
-                                    {
-                                        List<Imageinfo> temp_imageinfolist = data.query.pages[j].imageinfo;
-
-
-                                        foreach (Imageinfo var in temp_imageinfolist)
-                                        {
-                                            imagenames.StringContent += var.url;
-                                            imageurls.Add(var.url);
-                                        }
-
-
-                                    }
-
-                                } catch (Exception ex) { }*/
-
-        //}
-
-        /*<--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->*/
-
-    //}
-
-            wikiContent.imageurlsTEMP = imageurls;
-                Frame.Navigate(typeof(ContentPage), wikiContent); 
+            wikiContent.RemainingContent = data_AsString;
+            Frame.Navigate(typeof(ContentPage), wikiContent); 
         }
         
 
@@ -437,7 +352,7 @@ namespace Wikipedia_Fluent
         {
             string input = Content;
 
-            string pattern = @"(\n\[|^\[)\[.*(\]\]\n|\]\]$)";
+            string pattern = @"\[\[File:.*?\]\]\n";
             string[] images = Regex.Matches(input, pattern)
                                 .OfType<Match>()
                                 .Select(m => m.Value)
@@ -448,7 +363,7 @@ namespace Wikipedia_Fluent
             foreach(var Var in images)
             {
                 bool added_to_object = false;
-                string pattern0 = @"\n?\[\[(File:.*?)\|.*?(\]\]\n|\]\]$)";
+                string pattern0 = @"\n?\[?\[(File:.*?)\|.*?(\]\]\n|\]\]$)";
                 ParsedImageInfo imginfo = new ParsedImageInfo();
                 Regex regex = new Regex("");
 
@@ -614,7 +529,42 @@ namespace Wikipedia_Fluent
 
             string URL = sb_ImageInfoURL.ToString();
             return URL;
-        }      
+        }
+        public static void SetImageProperties(Rootobject rootobj, List<ParsedImageInfo> imageinfo_list, int i)
+        {
+            if (rootobj.query.pages[0].imageinfo == null)
+            { }
+            else
+            {
+                string image_DL_URL = rootobj.query.pages[0].imageinfo[0].url;
+                int image_size = rootobj.query.pages[0].imageinfo[0].size;
+                int image_height = rootobj.query.pages[0].imageinfo[0].height;
+                int image_width = rootobj.query.pages[0].imageinfo[0].width;
+
+                string image_description_URL = rootobj.query.pages[0].imageinfo[0].descriptionurl;
+                string image_parsed_comment = rootobj.query.pages[0].imageinfo[0].parsedcomment;
+                string media_type = rootobj.query.pages[0].imageinfo[0].mediatype;
+                string canonical_title = rootobj.query.pages[0].imageinfo[0].canonicaltitle;
+
+                string thumb_DL_URL = rootobj.query.pages[0].imageinfo[0].thumburl;
+                int thumb_width = rootobj.query.pages[0].imageinfo[0].thumbwidth;
+                int thumb_height = rootobj.query.pages[0].imageinfo[0].thumbheight;
+
+                imageinfo_list[i].URL = image_DL_URL;
+                imageinfo_list[i].Size = image_size;
+                imageinfo_list[i].Height = image_height;
+                imageinfo_list[i].Width = image_width;
+                imageinfo_list[i].DescriptionURL = image_description_URL;
+                imageinfo_list[i].ParsedComment = image_parsed_comment;
+                imageinfo_list[i].Mediatype = media_type;
+                imageinfo_list[i].CanonicalTitle = canonical_title;
+                imageinfo_list[i].ThumbURL = thumb_DL_URL;
+                imageinfo_list[i].ThumbWidth = thumb_width;
+                imageinfo_list[i].ThumbHeight = thumb_height;
+            }
+            
+
+        }
         public static async Task<Rootobject> GetImageInfoFromAPI(string imageURL)
         {
             Rootobject rootobject = new Rootobject();

@@ -106,22 +106,6 @@
                             Background="Transparent"
                             Margin="5,0,5,0"/>
 
-                    <!--
-                    <TextBlock Name="PageTitle_Textblock"
-                               Text="{Binding PageTitleText}"  
-                               FocusVisualSecondaryBrush="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}"
-                               FontFamily="{ThemeResource PivotHeaderItemFontFamily}"
-                               FontSize="34"
-                               Width="150"
-                               Height="75"
-                               Foreground="Black"
-                               Visibility="Visible"
-                               HorizontalTextAlignment="Center"
-                               RelativePanel.AlignHorizontalCenterWithPanel="True"
-                               RelativePanel.AlignVerticalCenterWith="backbtn"
-                               Margin="5,3,5,0"/>
-                    -->
-
 
 
                     <Button x:Name="splitviewtogglebtn"
@@ -160,31 +144,31 @@
                     <VisualState.Setters>
                         <!--Hamburger Button-->
                         <Setter Target="hamburgerbtn.Width" Value="70"/>
-                        <Setter Target="hamburgerbtn.Height" Value="75"/>
+                        <Setter Target="hamburgerbtn.Height" Value="65"/>
                         <Setter Target="hamburgerbtn.FontSize" Value="24"/>
                         <Setter Target="hamburgerbtn.Margin" Value="0,0,0,0"/>
                         <!--Home Button-->
                         <Setter Target="homebtn.Width" Value="70"/>
-                        <Setter Target="homebtn.Height" Value="75"/>
+                        <Setter Target="homebtn.Height" Value="65"/>
                         <Setter Target="homebtn.FontSize" Value="24"/>
                         <!--Settings Button-->
                         <Setter Target="settingsbtn.Width" Value="70"/>
-                        <Setter Target="settingsbtn.Height" Value="75"/>
+                        <Setter Target="settingsbtn.Height" Value="65"/>
                         <Setter Target="settingsbtn.FontSize" Value="24"/>
                         <!--Back Button-->
                         <Setter Target="backbtn.Width" Value="140"/>                                    
-                        <Setter Target="backbtn.Height" Value="75"/>
+                        <Setter Target="backbtn.Height" Value="65"/>
                         <Setter Target="backbtn.FontSize" Value="24"/>
                         <Setter Target="backbtn.Margin" Value="0,0,15,0"/>
                         <!--Replace hamburger menu-->
                         <Setter Target="splitviewtogglebtn.Visibility" Value="Visible"/>
                         <Setter Target="splitviewtogglebtn.Width" Value="100"/>
-                        <Setter Target="splitviewtogglebtn.Height" Value="75"/>
+                        <Setter Target="splitviewtogglebtn.Height" Value="65"/>
                         <Setter Target="splitviewtogglebtn.FontSize" Value="24"/>
                         <Setter Target="splitviewtogglebtn.Margin" Value="15, 0, 15,0"/>
                         <!--Forward button-->
                         <Setter Target="forwardbtn.Width" Value="140"/>
-                        <Setter Target="forwardbtn.Height" Value="75"/>
+                        <Setter Target="forwardbtn.Height" Value="65"/>
                         <Setter Target="forwardbtn.FontSize" Value="24"/>
                         <Setter Target="forwardbtn.Margin" Value="15,0,0,0"/>
                         <!--Split-->
@@ -199,27 +183,27 @@
                     <VisualState.Setters>
                         <!-- Hamburger Button-->
                         <Setter Target="hamburgerbtn.Width" Value="60"/>
-                        <Setter Target="hamburgerbtn.Height" Value="75"/>
+                        <Setter Target="hamburgerbtn.Height" Value="65"/>
                         <Setter Target="hamburgerbtn.FontSize" Value="24"/>
                         <Setter Target="hamburgerbtn.Margin" Value="0,0,0,0"/>
                         <!--Home Button-->
                         <Setter Target="homebtn.Width" Value="60"/>
-                        <Setter Target="homebtn.Height" Value="75"/>
+                        <Setter Target="homebtn.Height" Value="65"/>
                         <Setter Target="homebtn.FontSize" Value="24"/>
                         <!-- Settings Button -->
                         <Setter Target="settingsbtn.Width" Value="60"/>
-                        <Setter Target="settingsbtn.Height" Value="75"/>
+                        <Setter Target="settingsbtn.Height" Value="65"/>
                         <Setter Target="settingsbtn.FontSize" Value="24"/>
                         <!-- Back Button -->
                         <Setter Target="backbtn.Width" Value="155"/>
-                        <Setter Target="backbtn.Height" Value="75"/>
+                        <Setter Target="backbtn.Height" Value="65"/>
                         <Setter Target="backbtn.FontSize" Value="24"/>
                         <Setter Target="backbtn.Margin" Value="0,0,25,0"/>
                         <!-- Replace hamburger menu-->
                         <Setter Target="splitviewtogglebtn.Visibility" Value="Collapsed"/>
                         <!-- Forward button -->
                         <Setter Target="forwardbtn.Width" Value="155"/>
-                        <Setter Target="forwardbtn.Height" Value="75"/>
+                        <Setter Target="forwardbtn.Height" Value="65"/>
                         <Setter Target="forwardbtn.FontSize" Value="24"/>
                         <Setter Target="forwardbtn.Margin" Value="25,0,0,0"/>
                         <!-- Pane -->
@@ -234,27 +218,27 @@
                     <VisualState.Setters>
                         <!-- Hamburger Button-->
                         <Setter Target="hamburgerbtn.Width" Value="60"/>
-                        <Setter Target="hamburgerbtn.Height" Value="75"/>
+                        <Setter Target="hamburgerbtn.Height" Value="65"/>
                         <Setter Target="hamburgerbtn.FontSize" Value="24"/>
                         <Setter Target="hamburgerbtn.Margin" Value="0,0,0,0"/>
                         <!--Home Button-->
                         <Setter Target="homebtn.Width" Value="60"/>
-                        <Setter Target="homebtn.Height" Value="75"/>
+                        <Setter Target="homebtn.Height" Value="65"/>
                         <Setter Target="homebtn.FontSize" Value="24"/>
                         <!-- Settings Button -->
                         <Setter Target="settingsbtn.Width" Value="60"/>
-                        <Setter Target="settingsbtn.Height" Value="75"/>
+                        <Setter Target="settingsbtn.Height" Value="65"/>
                         <Setter Target="settingsbtn.FontSize" Value="24"/>
                         <!-- Back Button -->
                         <Setter Target="backbtn.Width" Value="165"/>
-                        <Setter Target="backbtn.Height" Value="75"/>
+                        <Setter Target="backbtn.Height" Value="65"/>
                         <Setter Target="backbtn.FontSize" Value="24"/>
                         <Setter Target="backbtn.Margin" Value="0,0,25,0"/>
                         <!-- Replace hamburger menu-->
                         <Setter Target="splitviewtogglebtn.Visibility" Value="Collapsed"/>
                         <!-- Forward button -->
                         <Setter Target="forwardbtn.Width" Value="165"/>
-                        <Setter Target="forwardbtn.Height" Value="75"/>
+                        <Setter Target="forwardbtn.Height" Value="65"/>
                         <Setter Target="forwardbtn.FontSize" Value="24"/>
                         <Setter Target="forwardbtn.Margin" Value="25,0,0,0"/>
                         <!-- Pane -->
@@ -269,27 +253,27 @@
                     <VisualState.Setters>
                         <!-- Hamburger Button-->
                         <Setter Target="hamburgerbtn.Width" Value="65"/>
-                        <Setter Target="hamburgerbtn.Height" Value="75"/>
+                        <Setter Target="hamburgerbtn.Height" Value="65"/>
                         <Setter Target="hamburgerbtn.FontSize" Value="24"/>
                         <Setter Target="hamburgerbtn.Margin" Value="0,0,0,0"/>
                         <!--Home Button-->
                         <Setter Target="homebtn.Width" Value="65"/>
-                        <Setter Target="homebtn.Height" Value="75"/>
+                        <Setter Target="homebtn.Height" Value="65"/>
                         <Setter Target="homebtn.FontSize" Value="24"/>
                         <!-- Settings Button -->
                         <Setter Target="settingsbtn.Width" Value="65"/>
-                        <Setter Target="settingsbtn.Height" Value="75"/>
+                        <Setter Target="settingsbtn.Height" Value="65"/>
                         <Setter Target="settingsbtn.FontSize" Value="24"/>
                         <!-- Back Button -->
                         <Setter Target="backbtn.Width" Value="175"/>
-                        <Setter Target="backbtn.Height" Value="75"/>
+                        <Setter Target="backbtn.Height" Value="65"/>
                         <Setter Target="backbtn.FontSize" Value="24"/>
                         <Setter Target="backbtn.Margin" Value="0,0,25,0"/>
                         <!-- Replace hamburger menu-->
                         <Setter Target="splitviewtogglebtn.Visibility" Value="Collapsed"/>
                         <!-- Forward button -->
                         <Setter Target="forwardbtn.Width" Value="175"/>
-                        <Setter Target="forwardbtn.Height" Value="75"/>
+                        <Setter Target="forwardbtn.Height" Value="65"/>
                         <Setter Target="forwardbtn.FontSize" Value="24"/>
                         <Setter Target="forwardbtn.Margin" Value="25,0,0,0"/>
                         <!-- Pane lengths-->
