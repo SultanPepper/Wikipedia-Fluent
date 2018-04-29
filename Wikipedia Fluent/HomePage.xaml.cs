@@ -59,7 +59,7 @@ namespace Wikipedia_Fluent
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            
+
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -88,7 +88,7 @@ namespace Wikipedia_Fluent
             data_AsString = wikiContent.Regex_DeleteData(data_AsString, @"^{{(.|\n)*?\n}}(?=\n''')", ""); //Removes table data
 
             introduction.Content = wikiContent.GetIntroContent(data_AsString); //Gets intro paragraph
-            data_AsString = wikiContent.Regex_DeleteData(data_AsString, @"(\\n|^)'''(.|\n)*?(?=\n==(\w|\d))", ""); //Removes intro paragraph
+            data_AsString = wikiContent.Regex_DeleteData(data_AsString, @"(\n|^)'''(.|\n)*?(?=\n==(\w|\d))", ""); //Removes intro paragraph
 
 
             //Gets intro images
@@ -107,187 +107,27 @@ namespace Wikipedia_Fluent
                 SetImageProperties(rootobject_image, intro_imageinfo_list, i);
             }
 
-            //Remove image text
-            //introduction.Content = wikiContent.Regex_DeleteData(wikiContent.GetIntroContent(data_AsStringCut),
-            //    @"\n?(\[|^\[)\[?File:.*?\[?.*?(\]{2,4}\n|\]{2,4}$)(?=([^\n?\[\[\[?\[?]))", "");
-
-
-
-
             wikiContent.Introduction = introduction;
 
-
-            //HEADERS, SUBHEADERS, and SUBSUBHEADERS            
-            string[] n1s_and_derivatives = wikiContent.Regex_Put_N1_AndDerivativesToArray(data_AsString);
-
-            List<Node_1> N1 = new List<Node_1>(); //NOTE: White space still needs to be formatted
-            foreach (string n1_and_derivatives in n1s_and_derivatives)
-            {
-                Node_1 n1_iteration = new Node_1();
-                string n1_ContentAndTitle = wikiContent.Regex_Get_N1_ContentAndTitle(n1_and_derivatives); ////// <============== N1 Content PLUS Title
-
-                n1_iteration.Title = wikiContent.Regex_Get_N1_Title(n1_and_derivatives); /////////////// <============== N1 Title
-
-                List<ParsedImageInfo> n1_imageinfo_list = new List<ParsedImageInfo>();
-                string n1_iteration_content = wikiContent.Regex_Get_N1_Content(n1_and_derivatives);
-                n1_imageinfo_list = GetImageInfoFromContent(n1_iteration_content); //Get image data
-
-                //N1 images
-                int n1_imageinfo_count = n1_imageinfo_list.Count;
-                for (int i = 0; i < n1_imageinfo_count; i++)
-                {
-                    Rootobject rootobject_image = new Rootobject();
-                    string parsedImageName = ParseImageName(n1_imageinfo_list[i].Filename);
-                    string imageinfoURL = GetImageInfoURL(parsedImageName);
-                    rootobject_image = await GetImageInfoFromAPI(imageinfoURL);
-                    SetImageProperties(rootobject_image, n1_imageinfo_list, 0);
-                    
-                }
-
-                n1_iteration_content = RemoveImageInfoFromContent(n1_and_derivatives); ////// <============== Header Content (with image data removed!)               
-
-                n1_iteration.Content = wikiContent.Regex_Get_N1_Content(n1_and_derivatives); ////// <============== N1 Content
-                //n1_iteration.Content = wikiContent.Regex_DeleteData(wikiContent.Regex_Get_N1_Content(n1_and_derivatives),
-                //@"\n?(\[|^\[)\[?File:.*?\[?.*?(\]{2,4}\n|\]{2,4}$)(?=([^\n?\[\[\[?\[?]))", ""); 
-
-                //Contains Subheaders and derivatives
-                List<Node_2> N2 = new List<Node_2>();
-                string[] n2s_and_derivatives = wikiContent.Regex_Put_N2_AndDerivativesToArray(n1_and_derivatives);
-                foreach (string n2_and_derivatives in n2s_and_derivatives)
-                {
-                    Regex regex = new Regex(@"((^==|\n==)=(\w|\d|\s).*?==(.|\n|\*)*?(?=(^={2,5}(\w|\d|\s)|\n={2,5}(\w|\d|\s)|$)))");
-                    Match match_n2 = regex.Match(n2_and_derivatives);
-                    Node_2 n2_iteration = new Node_2();
-                    if (match_n2.Success)
-                    {
-                        string n2_ContentAndTitle = wikiContent.Regex_Get_N2_ContentAndTitle(match_n2.Value); ////////// <============== N2 Content PLUS Title
-
-                        List<ParsedImageInfo> n2_imageinfo_list = new List<ParsedImageInfo>();
-                        n2_iteration.Title = wikiContent.Regex_Get_N2_Title(match_n2.Value); //////////////// <============== N2 Title
+            Rootobject rootobj = await GetPageSections(searchQuery.Text);
 
 
-                        //n2_iteration.Content = wikiContent.Regex_DeleteData(wikiContent.Regex_Get_N2_Content(match_n2.Value),
-                        //                                  @"\n?(\[|^\[)\[?File:.*?\[?.*?(\]{2,4}\n|\]{2,4}$)(?=([^\n?\[\[\[?\[?]))", "");
-                        n2_iteration.Content = wikiContent.Regex_Get_N2_Content(match_n2.Value);  /////// <============== N2 Content
+            wikiContent = await PutSectionsIntoNodes(rootobj);
+            wikiContent.Introduction = introduction;
+            wikiContent.PageTitle = data_AsRootObject.parse.title;
 
-                        string n2_iteration_content = wikiContent.Regex_Get_N2_Content(match_n2.Value);
-                        n2_imageinfo_list = GetImageInfoFromContent(n2_iteration_content); //Get image data
+            ForEachContentHolder contentholder = new ForEachContentHolder();
 
-                        //N2 images
-                        int n2_imageinfo_count = n2_imageinfo_list.Count;
-                        for(int i = 0; i < n2_imageinfo_count; i++)
-                        {
-                            Rootobject rootobject_image = new Rootobject();
-                            string parsedImageName = ParseImageName(n2_imageinfo_list[i].Filename);
-                            string imageinfoURL = GetImageInfoURL(parsedImageName);
-                            rootobject_image = await GetImageInfoFromAPI(imageinfoURL);
-                            SetImageProperties(rootobject_image, n2_imageinfo_list, i);
-                        }
-                        
-
-                        List<Node_3> N3 = new List<Node_3>();
-                        string[] n3s_and_derivatives = wikiContent.Regex_Put_N3_AndDerivativesToArray(n2_and_derivatives);
-                        foreach (string n3_and_derivatives in n3s_and_derivatives)
-                        {
-                            regex = new Regex(@"((^===|\n===)=(\w|\d|\s).*?==(.|\n|\*)*?(?=(^={2,5}(\w|\d|\s)|\n={2,5}(\w|\d|\s)|$)))");
-                            Match match_n3 = regex.Match(n3_and_derivatives);
-                            Node_3 n3_iteration = new Node_3();
-                            if (match_n3.Success)
-                            {
-                                string n3_ContentAndTitle = wikiContent.Regex_Get_N3_ContentAndTitle(match_n3.Value); //////////////////////// <============== N3 Content PLUS Title
-
-
-                                List<ParsedImageInfo> n3_imageinfo_list = new List<ParsedImageInfo>();
-                                n3_imageinfo_list = GetImageInfoFromContent(data_AsString);
-
-                                //N3 images
-                                int n3_imageinfo_count = intro_imageinfo_list.Count;
-                                for(int i = 0; i < intro_imageinfo_count; i++)
-                                {
-                                    Rootobject rootobject_image = new Rootobject();
-                                    string parsedImageName = ParseImageName(intro_imageinfo_list[i].Filename);
-                                    string imageinfoURL = GetImageInfoURL(parsedImageName);
-                                    rootobject_image = await GetImageInfoFromAPI(imageinfoURL);
-                                    SetImageProperties(rootobject_image, n3_imageinfo_list, i);
-                                }
-
-
-                                n3_iteration.Title = wikiContent.Regex_Get_N3_Title(match_n3.Value); ////////////////////////// <============== N3 Title
-                                //n3_iteration.Content = wikiContent.Regex_DeleteData(wikiContent.Regex_Get_N3_Content(match_n3.Value),
-                                //                    @"\n?(\[|^\[)\[?File:.*?\[?.*?(\]{2,4}\n|\]{2,4}$)(?=([^\n?\[\[\[?\[?]))", "");
-                                n3_iteration.Content = wikiContent.Regex_Get_N3_Content(match_n3.Value);        ////////////// <============== N3 Content
-
-                                List<Node_4> N4 = new List<Node_4>();
-                                string[] n4s_and_derivatives = wikiContent.Regex_Put_N4_AndDerivativesToArray(n3_and_derivatives);
-                                foreach (string n4_and_derivatives in n4s_and_derivatives)
-                                {
-                                    //And current S3 header to list of S3 headers
-                                    string n4_ContentAndTitle = wikiContent.Regex_Get_N4_ContentAndTitle(n4_and_derivatives); /////////////// <============== N4 COntent PLUS Title
-
-                                    List<ParsedImageInfo> n4_imageinfo_list = new List<ParsedImageInfo>();
-                                    n3_imageinfo_list = GetImageInfoFromContent(data_AsString);
-
-                                    //N4 images
-                                    int n4_imageinfo_count = intro_imageinfo_list.Count;
-                                    for(int i = 0; i < intro_imageinfo_count; i++)
-                                    {
-                                        Rootobject rootobject_image = new Rootobject();
-                                        string parsedImageName = ParseImageName(intro_imageinfo_list[i].Filename);
-                                        string imageinfoURL = GetImageInfoURL(parsedImageName);
-                                        rootobject_image = await GetImageInfoFromAPI(imageinfoURL);
-                                        SetImageProperties(rootobject_image, n4_imageinfo_list, i);
-                                    }
-
-
-                                    string n4_Title = wikiContent.Regex_Get_N4_Title(n4_and_derivatives); //////////////////// <============== N4 Title
-
-                                    //string n4_Content= wikiContent.Regex_DeleteData(wikiContent.Regex_Get_N4_Content(n4_and_derivatives),
-                                    //                @"(\n\[|^\[)\[?File:.*?\[.*(\]\]{2,4}\n|\]\]{2,4}$)", "");
-                                    string n4_Content = wikiContent.Regex_Get_N4_Content(n4_and_derivatives); ////////////// <============== N4 Content
-
-                                    
-
-                                    N4.Add(new Node_4() { Content = n4_Content, Title = n4_Title });
-                                }
-
-                                // Capital letter = List (e.g., N3) || Lowercase = Single instance of object (e.g., n3_iteration)
-                                //Add list of fourth node as object in third node
-                                n3_iteration.Node_4_list = N4;
-                            }
-                            //Add third node to list of third nodes
-                            N3.Add(n3_iteration);
-                        }
-                        //Add list of current S2 headers to current S1 header
-                        n2_iteration.Node_3_list = N3;
-                        n2_iteration.ParsedImage_list = n2_imageinfo_list;
-                    }
-                    //Add current S1 header to list of S1 headers
-                    N2.Add(n2_iteration);
-                }
-                //Add list of S1 headers to current header
-                n1_iteration.Node_2_list = N2;
-                n1_iteration.ParsedImage_list = n1_imageinfo_list;
-                //Add current header to list of headers
-                N1.Add(n1_iteration);
-            }
-            //Add list of headers to rootobject
-            wikiContent.Node_1_list = N1;
-
-            ForEachContentHolder teststring = new ForEachContentHolder();
-            int header_length = wikiContent.Node_1_list.Count;
+            
+            //Textblock1.Text = contentholder.StringContent;
 
             //Teeing up info to pass to next page
             WikiPageContentsToPass PassThruContent = new WikiPageContentsToPass();
-            PassThruContent.PageTitle = wikiContent.PageTitle;
-            PassThruContent.PageContent = teststring.StringContent + data_AsString;
-
-
-
 
             wikiContent.RemainingContent = data_AsString;
-            Frame.Navigate(typeof(ContentPage), wikiContent); 
+            Frame.Navigate(typeof(ContentPage), wikiContent);
         }
-        
+
 
 
         private void submitbtn_Click(object sender, RoutedEventArgs e)
@@ -300,24 +140,24 @@ namespace Wikipedia_Fluent
             string empty = "";
             string space = " ";
 
-            if (e.Key == VirtualKey.Enter 
-                && searchtext != empty 
-                && searchtext !=space)
+            if(e.Key == VirtualKey.Enter
+                && searchtext != empty
+                && searchtext != space)
             {
                 SubmitButtonEvent();
-            }                     
+            }
         }
         private void searchQuery_Loaded(object sender, RoutedEventArgs e)
         {
             searchQuery.Focus(Windows.UI.Xaml.FocusState.Keyboard);
         }
 
-        
+
         private async void searchQuery_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
 
 
-            
+
         }
         private void searchQuery_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
@@ -329,10 +169,10 @@ namespace Wikipedia_Fluent
         }
         private void searchQuery_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+
+            if(args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                
+
 
                 List<Prefixsearch> prefixsearches = new List<Prefixsearch>();
                 Suggestions = new ObservableCollection<Prefixsearch>();
@@ -343,12 +183,12 @@ namespace Wikipedia_Fluent
 
                 //Set the ItemsSource to be your filtered dataset
                 //sender.ItemsSource = dataset;
-            } 
+            }
         }
 
 
         //Image methods
-        public List<ParsedImageInfo> GetImageInfoFromContent(string Content)
+        public static List<ParsedImageInfo> GetImageInfoFromContent(string Content)
         {
             string input = Content;
 
@@ -437,7 +277,7 @@ namespace Wikipedia_Fluent
                 else { }
 
                 //Only if there's a file name, add to the list
-                if (String.IsNullOrEmpty(imginfo.Filename))
+                if(String.IsNullOrEmpty(imginfo.Filename))
                 {
 
                 }
@@ -453,7 +293,7 @@ namespace Wikipedia_Fluent
 
             return imglist;
         }
-        public string ParseImageName(string image_name)
+        public static string ParseImageName(string image_name)
         {
             //Parsing the title
             string input_img = image_name;
@@ -532,7 +372,7 @@ namespace Wikipedia_Fluent
         }
         public static void SetImageProperties(Rootobject rootobj, List<ParsedImageInfo> imageinfo_list, int i)
         {
-            if (rootobj.query.pages[0].imageinfo == null)
+            if(rootobj.query.pages[0].imageinfo == null)
             { }
             else
             {
@@ -550,19 +390,41 @@ namespace Wikipedia_Fluent
                 int thumb_width = rootobj.query.pages[0].imageinfo[0].thumbwidth;
                 int thumb_height = rootobj.query.pages[0].imageinfo[0].thumbheight;
 
-                imageinfo_list[i].URL = image_DL_URL;
-                imageinfo_list[i].Size = image_size;
-                imageinfo_list[i].Height = image_height;
-                imageinfo_list[i].Width = image_width;
-                imageinfo_list[i].DescriptionURL = image_description_URL;
-                imageinfo_list[i].ParsedComment = image_parsed_comment;
-                imageinfo_list[i].Mediatype = media_type;
-                imageinfo_list[i].CanonicalTitle = canonical_title;
-                imageinfo_list[i].ThumbURL = thumb_DL_URL;
-                imageinfo_list[i].ThumbWidth = thumb_width;
-                imageinfo_list[i].ThumbHeight = thumb_height;
+                if(imageinfo_list[i] != null)
+                {
+
+                    imageinfo_list[i].URL = image_DL_URL;
+                    imageinfo_list[i].Size = image_size;
+                    imageinfo_list[i].Height = image_height;
+                    imageinfo_list[i].Width = image_width;
+                    imageinfo_list[i].DescriptionURL = image_description_URL;
+                    imageinfo_list[i].ParsedComment = image_parsed_comment;
+                    imageinfo_list[i].Mediatype = media_type;
+                    imageinfo_list[i].CanonicalTitle = canonical_title;
+                    imageinfo_list[i].ThumbURL = thumb_DL_URL;
+                    imageinfo_list[i].ThumbWidth = thumb_width;
+                    imageinfo_list[i].ThumbHeight = thumb_height;
+                }
+
+                else
+                {
+                    imageinfo_list.Add(new ParsedImageInfo
+                    {
+                        URL = image_DL_URL,
+                        Size = image_size,
+                        Height = image_height,
+                        Width = image_width,
+                        DescriptionURL = image_description_URL,
+                        ParsedComment = image_parsed_comment,
+                        Mediatype = media_type,
+                        CanonicalTitle = canonical_title,
+                        ThumbURL = thumb_DL_URL,
+                        ThumbWidth = thumb_width,
+                        ThumbHeight = thumb_height
+                    });
+                }
             }
-            
+
 
         }
         public static async Task<Rootobject> GetImageInfoFromAPI(string imageURL)
@@ -661,15 +523,359 @@ namespace Wikipedia_Fluent
         {
             string n2_pattern = @"((^==|\n==)=(\w|\d|\s).*?==(.|\n|\*)*?(?=(^={2,5}(\w|\d|\s)|\n={2,5}(\w|\d|\s)|$)))";
             n2_regex = new Regex(n2_pattern);
-        }       
+        }
         public static void Set_N3_Regex(Regex n3_regex)
         {
             string n3_pattern = @"((^===|\n===)=(\w|\d|\s).*?==(.|\n|\*)*?(?=(^={2,5}(\w|\d|\s)|\n={2,5}(\w|\d|\s)|$)))";
             n3_regex = new Regex(n3_pattern);
         }
 
+        public static string Regex_ReplaceMatch(string Input, string Pattern, string Replacement)
+        {
+            string pattern = Pattern;
+            string input = Input;
+            string replacement = Replacement;
+            Regex regex = new Regex(pattern);
 
-        
+            string output = regex.Replace(input, replacement);
+            return output;
+        }
+        public async Task<WikiContent_Rootobject> PutSectionsIntoNodes(Rootobject rootobject)
+        {
+            WikiContent_Rootobject wikiContent = new WikiContent_Rootobject();
+            List<Node_1> n1_list = new List<Node_1>();
+
+            wikiContent.Node_1_list = n1_list;
+
+            List<Node_2> n2_list = new List<Node_2>();
+            List<Node_3> n3_list = new List<Node_3>();
+            List<Node_4> n4_list = new List<Node_4>();
+
+            int n1 = -1;
+            int n2 = -1;
+            int n3 = -1;
+            int n4 = 0;
+
+            foreach(Section section in rootobject.parse.sections)
+            {
+                string section_title = section.anchor;
+                string section_index = section.index;
+                string section_num = section.number;
+
+
+
+
+                string input = section.number;
+
+                //n1
+                string pattern_n1 = @"^\d{1,3}$";
+                Regex regex_n1 = new Regex(pattern_n1);
+                Match m_n1 = regex_n1.Match(input);
+
+                //n2
+                string pattern_n2 = @"^\d{1,3}\.\d{1,3}$";
+                Regex regex_n2 = new Regex(pattern_n2);
+                Match m_n2 = regex_n2.Match(input);
+
+                //n3
+                string pattern_n3 = @"^\d{1,3}\.\d{1,3}\.\d{1,3}$";
+                Regex regex_n3 = new Regex(pattern_n3);
+                Match m_n3 = regex_n3.Match(input);
+
+                //n4
+                string pattern_n4 = @"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$";
+                Regex regex_n4 = new Regex(pattern_n4);
+                Match m_n4 = regex_n1.Match(input);
+
+                if(m_n1.Success)
+                {
+                    n2 = -1;
+                    n3 = -1;
+                    n4 = -1;
+                    //Add everything added previously
+
+                    Node_1 n1_iteration = new Node_1();
+                    List<Node_2> n2list = new List<Node_2>();
+
+                    n1_iteration.Node_2_list = n2list;
+
+                    n1_iteration.SectionTitle = section_title;
+                    n1_iteration.SectionNum = section_num;
+                    n1_iteration.SectionIndex = section_index;
+
+                    //string n1_and_derivative_content = rootobject.query.pages[0].revisions[0].content;
+                    Rootobject n1_rootobject = await GetPageContent(searchQuery.Text, section_index);
+                    string SectionContent = n1_rootobject.query.pages[0].revisions[0].content;
+
+                    //And Saves value in N1
+                    GetAllContent(SectionContent, n1_iteration);
+
+
+                    wikiContent.Node_1_list.Add(n1_iteration);
+
+
+                    //Now empty the node so we add the current val into it
+                    Node_1 n1_empty = new Node_1();
+                    n1_iteration = n1_empty;
+
+                    n1++;
+                }
+
+                else
+                { }
+
+                
+            }
+            return wikiContent;
+        }
+        public async static void GetAllContent(string SectionContent, Node_1 n1_iteration)
+        {
+            string n1_andderivatives = SectionContent;
+
+            //Get N1 title and content
+            string n1_pattern = @"(^=|\n=)=([^=]?.+?)==((.|\n)*?)(?=($|\n===))";
+            Regex regex_select_n1 = new Regex(n1_pattern);
+            Match m_n1 = regex_select_n1.Match(SectionContent);
+            if(m_n1.Success)
+            {
+                n1_iteration.Title = m_n1.Groups[2].Value;
+
+                string n1_content = m_n1.Groups[3].Value;
+                n1_iteration.Content = n1_content;
+
+            }
+
+
+
+            string n2_pattern_and_deriv = @"(^=|\n=)==([^=]?.+?)===((\n|.)*?)(?=($|\n={3}(\w|\d|\s)))";
+
+            Regex regex_select_n2_and_deriv = new Regex(n2_pattern_and_deriv);
+            MatchCollection n2_match_collection = regex_select_n2_and_deriv.Matches(SectionContent);
+            int n_2_match_collection_count = n2_match_collection.Count;
+
+            if(n_2_match_collection_count > 0)
+            {
+                List<Node_2> n2_list = new List<Node_2>();
+
+                foreach(Match match_n2 in n2_match_collection)
+                {
+                    Node_2 node_2_interation = new Node_2();
+
+
+                    string n2_only = @"(^=|\n=)==([^=]?.+?)===((.|\n)*?)(?=($|\n={3,5}(\w|\d|\s)))";
+                    Regex regex_select_n2 = new Regex(n2_only);
+                    Match m_n2 = regex_select_n2.Match(match_n2.Value);
+
+                    node_2_interation.Title = m_n2.Groups[2].Value;
+
+                    string n2_content = m_n2.Groups[3].Value;
+                    node_2_interation.Content = n2_content;
+
+
+                    string n3_pattern_and_deriv = @"(^=|\n=)===([^=].+?)====((\n|.)*?)(?=($|\n={4}(\w|\d|\s)))";
+                    Regex regex_select_n3_and_deriv = new Regex(n3_pattern_and_deriv);
+                    MatchCollection n3_match_collection = regex_select_n3_and_deriv.Matches(m_n2.Value);
+
+                    int n_3_match_collection_count = n3_match_collection.Count;
+
+                    if(n_3_match_collection_count > 0)
+                    {
+                        List<Node_3> n3_list = new List<Node_3>();
+
+                        foreach(Match m_n3 in n3_match_collection)
+                        {
+                            Node_3 node_3_iteration = new Node_3();
+
+                            node_3_iteration.Title = m_n3.Groups[2].Value;
+
+                            string n3_content = m_n2.Groups[3].Value;
+
+                            node_3_iteration.Content = n3_content;
+
+                            string n4_pattern_and_deriv = @"(^=|\n=)====([^=].+?)=====((\n|.)*?)(?=($|\n={5}(\w|\d|\s)))";
+                            Regex regex_select_n4_and_deriv = new Regex(n4_pattern_and_deriv);
+                            MatchCollection n4_match_collection = regex_select_n4_and_deriv.Matches(m_n3.Value);
+
+                            int n_4_match_collection_count = n4_match_collection.Count;
+
+                            if(n_4_match_collection_count > 0)
+                            {
+                                List<Node_4> n4_list = new List<Node_4>();
+
+                                foreach(Match m_n4 in n4_match_collection)
+                                {
+                                    Node_4 node_4_iteration = new Node_4();
+
+                                    node_4_iteration.Title = m_n4.Groups[2].Value;
+
+                                    string n4_content = m_n4.Groups[3].Value;
+                                    node_4_iteration.Content = n4_content;
+
+                                    //Add n4 iteration to list
+                                    n4_list.Add(node_4_iteration);
+                                }
+                                //Add n4 list to n3 iteration
+                                node_3_iteration.Node_4_list = n4_list;
+                            }
+
+                            //Add n3 iteration to n3 list
+                            n3_list.Add(node_3_iteration);
+
+                        }
+
+                        //Add n3 list to n2 iteration
+                        node_2_interation.Node_3_list = n3_list;
+
+                    }
+
+                    //Add n2 iteration to n2 list
+                    n2_list.Add(node_2_interation);
+                }
+                //add n2 list to n1 iteration
+                n1_iteration.Node_2_list = n2_list;
+            }
+        }
+        public static void FixWhiteSpace(string Input)
+        {
+            string pattern = @"^\n{1,5}";
+            Regex removeintrospaces = new Regex(pattern);
+            Input = removeintrospaces.Replace(Input, "");
+            Input = Environment.NewLine + Input;
+
+            pattern = @"\n{1,6}$";
+            Regex removeendspace = new Regex(pattern);
+            Input = removeendspace.Replace(Input, "");
+            Input = Input + Environment.NewLine + Environment.NewLine;
+
+
+        }
+        public string GetContentURL(string SearchQuery, string Section)
+        {
+            //https://en.wikipedia.org/w/api.php?action=parse&page=New_York&format=json&prop=wikitext&section=4
+            //prop=revisions&titles=california&rvprop=content&rvsection=2&formatversion=2
+
+            string searchquery = SearchQuery;
+
+            string scheme = "https://";
+            StringBuilder sb_URL = new StringBuilder(scheme);
+
+            string language = "en";
+            language = String.Format("{0}.", language);
+            sb_URL.Append(language);
+
+            string authority = "wikipedia.org";
+            sb_URL.Append(authority);
+
+            string api_path = "/w/api.php";
+            sb_URL.Append(api_path);
+
+            string action = "query";
+            action = String.Format("?action={0}", action);
+            sb_URL.Append(action);
+
+            string titles = Regex_ReplaceMatch(searchquery, @"\s", "%20");
+            titles = String.Format("&titles={0}", titles);
+            sb_URL.Append(titles);
+
+            string prop = "revisions";
+            prop = String.Format("&prop={0}", prop);
+            sb_URL.Append(prop);
+
+            string rvprop = "content";
+            rvprop = String.Format("&rvprop={0}", rvprop);
+            sb_URL.Append(rvprop);
+
+            string format = "json";
+            format = String.Format("&format={0}", format);
+            sb_URL.Append(format);
+
+            string formatversion = "2";
+            formatversion = String.Format("&formatversion={0}", formatversion);
+            sb_URL.Append(formatversion);
+
+            string andRedirects = "&redirects";
+            sb_URL.Append(andRedirects);
+
+            string rvsection = Section;
+            rvsection = String.Format("&rvsection={0}", rvsection);
+            sb_URL.Append(rvsection);
+
+            string URL = sb_URL.ToString();
+
+            return URL;
+
+        }
+        public static string GetSectionsURL(string String)
+        {
+            //string searchquery = SearchQuery;
+
+            string scheme = "https://";
+            StringBuilder sb_URL = new StringBuilder(scheme);
+
+            string language = "en";
+            language = String.Format("{0}.", language);
+            sb_URL.Append(language);
+
+            string authority = "wikipedia.org";
+            sb_URL.Append(authority);
+
+            string api_path = "/w/api.php";
+            sb_URL.Append(api_path);
+
+            string action = "parse";
+            action = String.Format("?action={0}", action);
+            sb_URL.Append(action);
+
+            string page = Regex_ReplaceMatch(String, @"\s", "%20");
+            page = String.Format("&page={0}", String);
+            sb_URL.Append(page);
+
+            string prop = "sections";
+            prop = String.Format("&prop={0}", prop);
+            sb_URL.Append(prop);
+
+            string format = "json";
+            format = String.Format("&format={0}", format);
+            sb_URL.Append(format);
+
+            string formatversion = "2";
+            formatversion = String.Format("&formatversion={0}", formatversion);
+            sb_URL.Append(formatversion);
+
+            string andRedirects = "&redirects";
+            sb_URL.Append(andRedirects);
+
+            string URL = sb_URL.ToString();
+
+            return URL;
+
+        }
+        public async Task<Rootobject> GetPageContent(string SearchQuery, string SectionNum)
+        {
+            HttpClient http = new HttpClient();
+            string searchquery = SearchQuery;
+
+            string URL = GetContentURL(searchquery, SectionNum);
+
+            var response = await http.GetAsync(URL);
+            var result = await response.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<Rootobject>(result);
+
+            return data;
+        }
+
+        public static async Task<Rootobject> GetPageSections(string String)
+        {
+            HttpClient http = new HttpClient();
+            //string searchquery = SearchQuery;
+            string URL = GetSectionsURL(String);
+
+            var response = await http.GetAsync(URL);
+            var result = await response.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<Rootobject>(result);
+
+            return data;
+        }
     }
  
 }

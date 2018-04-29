@@ -52,7 +52,7 @@ namespace Wikipedia_Fluent
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
 
-            ContentFrame.Navigate(typeof(HomePage));
+            ContentFrame.Navigate(typeof(GridViewTest));
 
             
 

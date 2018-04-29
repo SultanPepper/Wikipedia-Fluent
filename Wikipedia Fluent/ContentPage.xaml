@@ -60,6 +60,7 @@
                       VerticalScrollMode="Auto"
                       HorizontalScrollBarVisibility="Disabled"
                       HorizontalScrollMode="Disabled"
+                      FocusVisualPrimaryBrush="{ThemeResource SystemControlAcrylicElementBrush}"  
                       Grid.Row="1"
                       Margin="0,0,0,0"
                       Background="WhiteSmoke"

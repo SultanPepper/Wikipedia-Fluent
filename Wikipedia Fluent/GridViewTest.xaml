@@ -1,0 +1,20 @@
+﻿<Page
+    x:Class="Wikipedia_Fluent.GridViewTest"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Wikipedia_Fluent"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" x:Name="GridLayout">
+        <ScrollViewer>
+        <RelativePanel>
+            <!--<AutoSuggestBox x:Name="searchQuery" RelativePanel.AlignTopWithPanel="True"  RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" PlaceholderText="Searching for..."/>
+            <TextBlock x:Name="Textblock1" VerticalAlignment="Stretch" RelativePanel.Below="searchQuery" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWith="Submit" TextWrapping="WrapWholeWords"/>
+            <Button x:Name="Submit" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" Click="Submit_Click" Content="Submit" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>-->
+        </RelativePanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>

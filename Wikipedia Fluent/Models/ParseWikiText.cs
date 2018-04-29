@@ -136,7 +136,7 @@ namespace Wikipedia_Fluent.Models
 
 
             string input = Input;
-            string pattern = @"(?<=\n)'''(.|\n)+?(?=\n==(\w|\d|\s))";
+            string pattern = @".*?'''(.|\n)+?'''(.|\n)*?(?=(==))";
 
             StringBuilder errormsg = new StringBuilder();
             errormsg.Append("There was difficulty extracting the intro content");
@@ -711,6 +711,9 @@ namespace Wikipedia_Fluent.Models
     public class Node_1
     {
         public string Title { get; set; }
+        public string SectionNum { get; set; }
+        public string SectionIndex { get; set; }
+        public string SectionTitle { get; set; }
         public string Content { get; set; }
         public string Tables { get; set; }
         public List<String> References { get; set; }
@@ -721,6 +724,9 @@ namespace Wikipedia_Fluent.Models
     public class Node_2
     {
         public string Title { get; set; }
+        public string SectionNum { get; set; }
+        public string SectionIndex { get; set; }
+        public string SectionTitle { get; set; }
         public string Content { get; set; }
         public string Table { get; set; }
         public List<String> References_List { get; set; }
@@ -731,6 +737,9 @@ namespace Wikipedia_Fluent.Models
     public class Node_3
     {
         public string Title { get; set; }
+        public string SectionNum { get; set; }
+        public string SectionIndex { get; set; }
+        public string SectionTitle { get; set; }
         public string Content { get; set; }
         public string Table { get; set; }
         public List<String> References_List { get; set; }
@@ -742,6 +751,9 @@ namespace Wikipedia_Fluent.Models
     public class Node_4
     {
         public string Title { get; set; }
+        public string SectionNum { get; set; }
+        public string SectionIndex { get; set; }
+        public string SectionTitle { get; set; }
         public string Content { get; set; }
         public string Table { get; set; }
         public List<String> References_List { get; set; }

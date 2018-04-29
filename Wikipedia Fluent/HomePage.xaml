@@ -41,14 +41,11 @@
               Grid.Column="1" 
               Grid.RowSpan="3" 
               Grid.ColumnSpan="3" 
-              VerticalAlignment="Center"
+              VerticalAlignment="Bottom"
               Margin="0,0,0,0">
             <StackPanel Name="myStackPanel">
 
-                <Rectangle x:Name="TransparentRectangle"
-                           Fill="Transparent"
-                           Width="5"
-                           Height="75"/>
+                
 
                 <AutoSuggestBox Name="searchQuery"
                 QueryIcon="Find"
@@ -62,7 +59,8 @@
                 VerticalAlignment="Top"                    
                 KeyDown="searchQuery_KeyDown"
                 Loaded="searchQuery_Loaded"                              
-                Margin="10,20,10,20"/>
+                Margin="10,20,10,20"
+                />
                 
                 
                 <Button Name="submitbtn"
@@ -76,11 +74,11 @@
                 Content="Submit"
                 FontSize="28"
                 BorderThickness="2"
-                BorderBrush="{ThemeResource ButtonBorderThemeBrush}"
-                Background="{ThemeResource SystemControlAccentDark2AcrylicWindowAccentDark2MediumHighBrush}"
+                BorderBrush="{ThemeResource ButtonBackgroundThemeBrush}"
+                Background="{ThemeResource SystemControlAccentDark1AcrylicElementAccentDark1Brush}"
                 Foreground="White"
                 Margin="5,5,5,5" 
-                FocusVisualSecondaryBrush="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}"/>
+                FocusVisualPrimaryBrush="{ThemeResource SystemControlBackgroundTransparentRevealBorderBrush}"/>
                 
                 <ProgressRing Name="progressRing"
                       IsActive="False"
@@ -93,6 +91,10 @@
                       Foreground="{ThemeResource SystemControlAccentDark2AcrylicWindowAccentDark2MediumHighBrush}"
                       Margin="10,10,10,10"
                       />
+                <Rectangle x:Name="TransparentRectangle"
+                           Fill="Transparent"
+                           Width="5"
+                           Height="75"/>
             </StackPanel>
         </Grid>
 
@@ -104,10 +106,10 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <!-- Placeholder rectangle-->
-                        <Setter Target="TransparentRectangle.Height" Value="45"/>
+                        <Setter Target="TransparentRectangle.Height" Value="35"/>
                         <!-- Query textbox-->
                         <Setter Target="searchQuery.FontSize" Value="24"/>
-                        <Setter Target="searchQuery.Margin" Value="25,25,40,25"/>
+                        <Setter Target="searchQuery.Margin" Value="25,0,40,25"/>
                         <Setter Target="searchQuery.MaxWidth" Value="430"/>
                         <!-- Submit button-->
                         <Setter Target="submitbtn.FontSize" Value="22"/>
