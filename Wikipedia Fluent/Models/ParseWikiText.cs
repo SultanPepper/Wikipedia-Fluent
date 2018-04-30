@@ -136,7 +136,7 @@ namespace Wikipedia_Fluent.Models
 
 
             string input = Input;
-            string pattern = @".*?'''(.|\n)+?'''(.|\n)*?(?=(==))";
+            string pattern = @"(?<=}}\n\n).*?'''(.|\n)+?'''(.|\n)*?(?=(==|$))";
 
             StringBuilder errormsg = new StringBuilder();
             errormsg.Append("There was difficulty extracting the intro content");

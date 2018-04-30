@@ -52,7 +52,7 @@ namespace Wikipedia_Fluent
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
 
-            ContentFrame.Navigate(typeof(GridViewTest));
+            ContentFrame.Navigate(typeof(HomePage));
 
             
 
@@ -70,6 +70,12 @@ namespace Wikipedia_Fluent
         private void homebtn_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(typeof(HomePage));
+            mySplitView.IsPaneOpen = false;
+        }
+
+        private void tablesbtn_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(typeof(MyTables));
             mySplitView.IsPaneOpen = false;
         }
 
@@ -119,5 +125,7 @@ namespace Wikipedia_Fluent
         {
             mySplitView.IsPaneOpen = false;
         }
+
+
     }       
 }

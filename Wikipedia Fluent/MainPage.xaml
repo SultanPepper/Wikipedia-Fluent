@@ -61,6 +61,21 @@
                         Height="70"
                         Content="&#xE80F;"/>
 
+                    <Button x:Name="tablesbtn"
+                        RelativePanel.Below="homebtn"
+                        Style="{ThemeResource ButtonRevealStyle}"
+                        FontFamily="Segoe MDL2 Assets"
+                        Click="tablesbtn_Click"
+                        Background="{ThemeResource SystemControlBackgroundTransparentRevealBorderBrush}"
+                        Foreground="GhostWhite"
+                        FontWeight="Normal"
+                        FontSize="34"                            
+                        Width="70"
+                        Height="70"
+                        Content="&#xE1F3;"/>
+
+
+
                     <Button Name="settingsbtn"
                         Margin="0,0,0,0"
                         RelativePanel.AlignBottomWithPanel="True"
@@ -152,6 +167,10 @@
                         <Setter Target="homebtn.Width" Value="70"/>
                         <Setter Target="homebtn.Height" Value="65"/>
                         <Setter Target="homebtn.FontSize" Value="24"/>
+                        <!--Tables Button-->
+                        <Setter Target="tablesbtn.Width" Value="70"/>
+                        <Setter Target="tablesbtn.Height" Value="65"/>
+                        <Setter Target="tablesbtn.FontSize" Value="24"/>
                         <!--Settings Button-->
                         <Setter Target="settingsbtn.Width" Value="70"/>
                         <Setter Target="settingsbtn.Height" Value="65"/>
@@ -191,6 +210,10 @@
                         <Setter Target="homebtn.Width" Value="60"/>
                         <Setter Target="homebtn.Height" Value="65"/>
                         <Setter Target="homebtn.FontSize" Value="24"/>
+                        <!--Tables Button-->
+                        <Setter Target="tablesbtn.Width" Value="60"/>
+                        <Setter Target="tablesbtn.Height" Value="65"/>
+                        <Setter Target="tablesbtn.FontSize" Value="24"/>
                         <!-- Settings Button -->
                         <Setter Target="settingsbtn.Width" Value="60"/>
                         <Setter Target="settingsbtn.Height" Value="65"/>
@@ -226,6 +249,10 @@
                         <Setter Target="homebtn.Width" Value="60"/>
                         <Setter Target="homebtn.Height" Value="65"/>
                         <Setter Target="homebtn.FontSize" Value="24"/>
+                        <!--Tables Button-->
+                        <Setter Target="tablesbtn.Width" Value="60"/>
+                        <Setter Target="tablesbtn.Height" Value="65"/>
+                        <Setter Target="tablesbtn.FontSize" Value="24"/>
                         <!-- Settings Button -->
                         <Setter Target="settingsbtn.Width" Value="60"/>
                         <Setter Target="settingsbtn.Height" Value="65"/>
@@ -261,6 +288,10 @@
                         <Setter Target="homebtn.Width" Value="65"/>
                         <Setter Target="homebtn.Height" Value="65"/>
                         <Setter Target="homebtn.FontSize" Value="24"/>
+                        <!--Tables Button-->
+                        <Setter Target="tablesbtn.Width" Value="65"/>
+                        <Setter Target="tablesbtn.Height" Value="65"/>
+                        <Setter Target="tablesbtn.FontSize" Value="24"/>
                         <!-- Settings Button -->
                         <Setter Target="settingsbtn.Width" Value="65"/>
                         <Setter Target="settingsbtn.Height" Value="65"/>

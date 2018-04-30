@@ -112,6 +112,7 @@ namespace Wikipedia_Fluent
                 Run n1_run_title = new Run();
                 Run n1_run_spacing = new Run();
                 Run n1_run_content = new Run();
+                Run n1_run_table = new Run();
                 SetProps_N1_ObjectProperties(n1_rtb, n1_run_title, n1_run_content);
                 
 
@@ -144,8 +145,13 @@ namespace Wikipedia_Fluent
                 content = parametersPassed.Node_1_list[a].Content;
                 Add_Content_MinimalMarkdown(content, n1_run_content, n1_paragraph);
 
+                //*Add N1 tables
+                PutTablesIn(parametersPassed.Node_1_list[a].Content, contentgrid, n1_rtb);
+
                 //*Add N1 to RichTextBlock → Stackpanel
                 Add_NodeToStackPanel(n1_paragraph, n1_rtb, ContentsStackPanel);
+
+
 
                 //////Node #2
                 if (parametersPassed.Node_1_list[a].Node_2_list != null)
@@ -190,8 +196,11 @@ namespace Wikipedia_Fluent
                         content = parametersPassed.Node_1_list[a].Node_2_list[b].Content;
                     Add_Content_MinimalMarkdown(content, n2_run_content, n2_paragraph);
 
-                    //**Add N2 to RichTextBlock → Stackpanel
-                    Add_NodeToStackPanel(n2_paragraph, n2_rtb, ContentsStackPanel);
+                        //**Add N2 tables
+                        PutTablesIn(parametersPassed.Node_1_list[a].Node_2_list[b].Content, contentgrid, n2_rtb);
+
+                        //**Add N2 to RichTextBlock → Stackpanel
+                        Add_NodeToStackPanel(n2_paragraph, n2_rtb, ContentsStackPanel);
 
                     //////Node #3
                     if (parametersPassed.Node_1_list[a].Node_2_list[b]
@@ -304,6 +313,153 @@ namespace Wikipedia_Fluent
             }
             //pageContent.DataContext = parametersPassed.node_1[1].Content;
         }
+        //Add tables
+        public static void PutTablesIn(string SectionContent, Grid Parentgrid, RichTextBlock rtb)
+        {
+
+            ScrollViewer scrollviewer = new ScrollViewer();
+            scrollviewer.HorizontalAlignment = HorizontalAlignment.Stretch;
+            scrollviewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+            scrollviewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+
+            Grid contentgrid = new Grid();
+
+            //Add newly created grid as a child
+            contentgrid.ColumnSpacing = 15;
+            contentgrid.RowSpacing = 5;
+            contentgrid.Margin = new Thickness(20, 20, 20, 20);
+
+            //Extract the ENTIRE table
+            string input = SectionContent;
+            string pattern = @"{\|.*(.|\n)*?\|}";
+            Regex regex = new Regex(pattern);
+            MatchCollection EntireTables = Regex.Matches(input, pattern);
+            Match TablePresent = regex.Match(input);
+            if (TablePresent.Success)
+            { 
+
+            //Add each column result to that row
+            pattern = @"(?<=(^\||\n\||\|\|))[^(\-|\+)].*?(?=(\|\||\n\||$))";
+            regex = new Regex(pattern);
+            MatchCollection columns_count = Regex.Matches(EntireTables[0].Value, pattern);
+            int column_counted = columns_count.Count;
+
+            for (int i = 0; i < column_counted; i++)
+            {
+                //Create the new column
+                ColumnDefinition coldef = new ColumnDefinition();
+                //coldef.Width = new GridLength(1, GridUnitType.Star);
+                coldef.Width = new GridLength(0, GridUnitType.Auto);
+                contentgrid.ColumnDefinitions.Add(coldef);
+            }
+
+            //Get list of entire tables
+            List<string> EntireTables_list = new List<string>();
+            foreach (Match match_entiretable in EntireTables)
+            {
+                EntireTables_list.Add(match_entiretable.Value);
+            }
+
+            //Parse out the tables
+            foreach (string Table in EntireTables_list)
+            {
+                InlineUIContainer tablecontainer = new InlineUIContainer();
+                Paragraph tableparagraph = new Paragraph();
+                int current_row = 0;
+
+                //Get each row
+                pattern = @"(?<=(\|-.*\n))(\n|.)*?(?=\n(\|-|\|}))";
+                regex = new Regex(pattern);
+                MatchCollection rows = Regex.Matches(Table, pattern);
+
+                pattern = @"(?<=(^!|\n!|!!)).*?(?=(!!|\n!|\n\|))";
+                regex = new Regex(pattern);
+                MatchCollection headers = Regex.Matches(Table, pattern);
+                Match m_header = regex.Match(Table);
+                int current_column = 0;
+                if (m_header.Success)
+                {
+
+                    RowDefinition rowdef = new RowDefinition();
+                    rowdef.Height = new GridLength(0, GridUnitType.Auto);
+                    contentgrid.RowDefinitions.Add(rowdef);
+
+                    foreach (Match header in headers)
+                    {
+                        TextBlock textblock = new TextBlock();
+                        textblock.Text = header.Value;
+                        textblock.FontSize = 16;
+                        textblock.FontWeight = FontWeights.Bold;
+                        textblock.HorizontalAlignment = HorizontalAlignment.Center;
+                        textblock.VerticalAlignment = VerticalAlignment.Center;
+
+                        contentgrid.Children.Add(textblock);
+
+                        Grid.SetColumn(textblock, current_column);
+                        Grid.SetRow(textblock, current_row);
+                        current_column++;
+                    }
+
+                    current_row++;
+                }
+
+                foreach (Match m_row in rows)
+                {
+                    current_column = 0;
+
+                    //Add a new row
+                    RowDefinition rowdef = new RowDefinition();
+                    rowdef.Height = new GridLength(0, GridUnitType.Auto);
+                    contentgrid.RowDefinitions.Add(rowdef);
+
+                    //Add each column result to that row
+                    pattern = @"(?<=(^\||\n\||\|\|))[^(\-|\+)].*?(?=(\|\||\n\||$))";
+                    regex = new Regex(pattern);
+                    MatchCollection columns = Regex.Matches(m_row.Value, pattern);
+
+
+
+                    foreach (Match m_col in columns)
+                    {
+
+
+                        //Content we will be adding too
+                        TextBlock textblock = new TextBlock();
+                        textblock.Text = m_col.Value;
+                        textblock.FontSize = 14;
+                        textblock.FontWeight = FontWeights.SemiLight;
+                        textblock.HorizontalAlignment = HorizontalAlignment.Left;
+                        textblock.VerticalAlignment = VerticalAlignment.Center;
+
+                        //Add block to grid
+                        contentgrid.Children.Add(textblock);
+
+                        //Set the row
+                        Grid.SetColumn(textblock, current_column);
+                        Grid.SetRow(textblock, current_row);
+
+                        current_column++;
+                    }
+                    current_row++;
+
+
+                    }
+
+                /*
+                    //Create container and add to it
+                    tablecontainer.Child = contentgrid;
+                    tableparagraph.Inlines.Add(tablecontainer);
+                    rtb.Blocks.Add(tableparagraph);
+                */
+
+                }
+
+        }
+            else { }
+        }
+
+
+
         //Image methods
         public static List<ParsedImageInfo> GetImageInfoFromContent(string Content)
         {
@@ -660,6 +816,8 @@ namespace Wikipedia_Fluent
                         Image img = new Image();
                         img.Stretch = Stretch.Uniform;
                         SvgImageSource svgimgsource = new SvgImageSource();
+                        //svgimgsource.RasterizePixelHeight = 1000;
+                        
                         Run img_run = new Run();
                         string img_url = ImgURL;
 
@@ -762,8 +920,8 @@ namespace Wikipedia_Fluent
 
 
 
-
             //Citations removed
+            
             pattern = @"{{(R|r)efbegin(.|\n)*?{{(R|r)efend}}";
             regex = new Regex(pattern);
             Content = regex.Replace(Content, replacement);
@@ -817,6 +975,22 @@ namespace Wikipedia_Fluent
             regex = new Regex(pattern);
             Content = regex.Replace(Content, replacement);
 
+            //Remove tables
+            pattern = @"{\|.*(.|\n)*\n\|}";
+            regex = new Regex(pattern);
+            Content = regex.Replace(Content, replacement);
+
+            pattern = @"{{col-begin}}";
+            regex = new Regex(pattern);
+            Content = regex.Replace(Content, replacement);
+
+            pattern = @"{{col-break}}";
+            regex = new Regex(pattern);
+            Content = regex.Replace(Content, replacement);
+
+            pattern = @"{{col-end}}";
+            regex = new Regex(pattern);
+            Content = regex.Replace(Content, replacement);
 
 
             //Remove starting whitespace
@@ -830,6 +1004,7 @@ namespace Wikipedia_Fluent
             pattern = @"\n{0,5}$";
             regex = new Regex(pattern);
             Content = regex.Replace(Content, replacement);
+            
 
   
             //Format to start with \n and end with \n\n
