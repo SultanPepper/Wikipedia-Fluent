@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Wikipedia_Fluent.Models;
 
 namespace Wikipedia_Fluent
 {
@@ -22,9 +23,10 @@ namespace Wikipedia_Fluent
     /// </summary>
     sealed partial class App : Application
     {
-
+        internal static WikiContent_Rootobject WikipediaRootObject;
          
         enum SetButtonVisibility { Visible, Collapsed };
+
 
 
 

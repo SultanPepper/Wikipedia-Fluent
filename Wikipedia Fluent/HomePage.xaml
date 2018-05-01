@@ -94,7 +94,7 @@
                 <Rectangle x:Name="TransparentRectangle"
                            Fill="Transparent"
                            Width="5"
-                           Height="75"/>
+                           Height="55"/>
             </StackPanel>
         </Grid>
 

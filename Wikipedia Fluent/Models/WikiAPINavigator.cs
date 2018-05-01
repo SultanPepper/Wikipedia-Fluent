@@ -57,9 +57,6 @@ namespace Wikipedia_Fluent.Models
         [DataMember]
         public object[] parsewarnings { get; set; }
         [DataMember]
-        public string 
-            le { get; set; }
-        [DataMember]
         public List<object> iwlinks { get; set; }
         [DataMember]
         public List<Property> properties { get; set; }

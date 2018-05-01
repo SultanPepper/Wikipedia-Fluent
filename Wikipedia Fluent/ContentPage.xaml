@@ -13,9 +13,9 @@
         <Style TargetType="TextBlock" x:Key="textblock_PageTitle">
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="FontSize" Value="44" />
+            <Setter Property="FontSize" Value="54" />
             <Setter Property="TextLineBounds" Value="Full" />
-            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontWeight" Value="Light" />
             <Setter Property="FontFamily" Value="XamlAutoFontFamily" />
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="TextTrimming" Value="None" />
@@ -36,17 +36,14 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" x:Name="contentgrid">
  
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+
 
         
         <TextBlock Name="pageTitle"
                    Text= "PageTitle"
                    Grid.Row="0"
                    Style="{StaticResource textblock_PageTitle}"
-                   Margin="50,-65,50,0"/>
+                   Margin="50,-67,50,0"/>
 
         <Border Grid.Row="1"
                 x:Name="Border"
@@ -61,7 +58,8 @@
                       HorizontalScrollBarVisibility="Disabled"
                       HorizontalScrollMode="Disabled"
                       FocusVisualPrimaryBrush="{ThemeResource SystemControlAcrylicElementBrush}"  
-                      Grid.Row="1"
+                      Grid.Row="0"
+                      Grid.RowSpan="2"    
                       Margin="0,0,0,0"
                       Background="WhiteSmoke"
                       Opacity=".999">
@@ -69,9 +67,10 @@
                 <StackPanel x:Name="ContentsStackPanel"
                             Margin="10,10,10,10">
 
-                    <RichTextBlock x:Name="title_rtb">
-                    </RichTextBlock>
-                    
+                    <RichTextBlock x:Name="title_rtb"/>
+                    <Button x:Name="Testing" Content="Test Click!"/>
+
+
                 </StackPanel>
             </ScrollViewer>
         </Border>
@@ -93,22 +92,24 @@
                 <VisualState.StateTriggers>
                     <AdaptiveTrigger MinWindowWidth="675"/>
                 </VisualState.StateTriggers>
-                <VisualState.Setters>
-                    <Setter Target="pageTitle.Margin" Value="50,-66,50,0"/>
-                    <Setter Target="pageTitle.Visibility" Value="Visible"/>
+                    <VisualState.Setters>
+                        <Setter Target="pageTitle.Visibility" Value="Visible"/>
                     <Setter Target="Border.BorderThickness" Value="1,2,1,1"/>
                     <Setter Target="title_rtb.Visibility" Value="Collapsed" />
-                </VisualState.Setters>
+                    <Setter Target="pageTitle.Margin" Value="90,-71,90,0"/>
+                    <Setter Target="pageTitle.FontSize" Value="54"/>
+                    </VisualState.Setters>
             </VisualState>
             <VisualState x:Name="Layout_3">
                 <VisualState.StateTriggers>
                     <AdaptiveTrigger MinWindowWidth="1400"/>
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
-                    <Setter Target="pageTitle.Margin" Value="50,-66,50,0"/>
+                    <Setter Target="pageTitle.Margin" Value="50,-71,50,0"/>
                     <Setter Target="pageTitle.Visibility" Value="Visible"/>
                     <Setter Target="Border.BorderThickness" Value="1,2,1,1"/>
                     <Setter Target="title_rtb.Visibility" Value="Collapsed" />
+                     <Setter Target="pageTitle.FontSize" Value="56"/>
                 </VisualState.Setters>
             </VisualState>
             <VisualState x:Name="Layout_4">
@@ -116,10 +117,11 @@
                     <AdaptiveTrigger MinWindowWidth="1800"/>
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
-                    <Setter Target="pageTitle.Margin" Value="50,-66,50,0"/>
+                    <Setter Target="pageTitle.Margin" Value="50,-71,50,0"/>
                     <Setter Target="pageTitle.Visibility" Value="Visible"/>
                     <Setter Target="Border.BorderThickness" Value="1,2,1,1"/>
                     <Setter Target="title_rtb.Visibility" Value="Collapsed" />
+                     <Setter Target="pageTitle.FontSize" Value="58"/>
                 </VisualState.Setters>
             </VisualState>
         </VisualStateGroup>

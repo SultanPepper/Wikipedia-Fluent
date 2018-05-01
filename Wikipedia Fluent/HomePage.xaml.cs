@@ -75,20 +75,20 @@ namespace Wikipedia_Fluent
 
             WikiContent_Rootobject wikiContent = new WikiContent_Rootobject();
             Rootobject data_AsRootObject = await wikiContent.GetPageContent(searchQuery.Text);
-            string data_AsString = data_AsRootObject.parse.wikitext;
 
-
-
-            //Defines page title
-            wikiContent.PageTitle = wikiContent.GetPageTitle(data_AsRootObject);
 
             //Adds introduction information into variable
             Introduction introduction = new Introduction();
+            Rootobject intro = await GetPageContent(searchQuery.Text, "0");
+            string data_AsString = intro.query.pages[0].revisions[0].content;
+
+            introduction.Content = data_AsString; //Gets intro paragraph
+            data_AsString = wikiContent.Regex_DeleteData(data_AsString, @"(\n|^)'''(.|\n)*?(?=\n==(\w|\d))", ""); //Removes intro paragraph
+
             introduction.DataTable = wikiContent.GetIntroTablesAndData(data_AsString); //Gets table data
             data_AsString = wikiContent.Regex_DeleteData(data_AsString, @"^{{(.|\n)*?\n}}(?=\n''')", ""); //Removes table data
 
-            introduction.Content = wikiContent.GetIntroContent(data_AsString); //Gets intro paragraph
-            data_AsString = wikiContent.Regex_DeleteData(data_AsString, @"(\n|^)'''(.|\n)*?(?=\n==(\w|\d))", ""); //Removes intro paragraph
+
 
 
             //Gets intro images

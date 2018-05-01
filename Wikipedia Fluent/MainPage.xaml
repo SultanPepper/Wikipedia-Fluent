@@ -202,36 +202,36 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <!-- Hamburger Button-->
-                        <Setter Target="hamburgerbtn.Width" Value="60"/>
+                        <Setter Target="hamburgerbtn.Width" Value="55"/>
                         <Setter Target="hamburgerbtn.Height" Value="65"/>
                         <Setter Target="hamburgerbtn.FontSize" Value="24"/>
                         <Setter Target="hamburgerbtn.Margin" Value="0,0,0,0"/>
                         <!--Home Button-->
-                        <Setter Target="homebtn.Width" Value="60"/>
+                        <Setter Target="homebtn.Width" Value="55"/>
                         <Setter Target="homebtn.Height" Value="65"/>
                         <Setter Target="homebtn.FontSize" Value="24"/>
                         <!--Tables Button-->
-                        <Setter Target="tablesbtn.Width" Value="60"/>
+                        <Setter Target="tablesbtn.Width" Value="55"/>
                         <Setter Target="tablesbtn.Height" Value="65"/>
                         <Setter Target="tablesbtn.FontSize" Value="24"/>
                         <!-- Settings Button -->
-                        <Setter Target="settingsbtn.Width" Value="60"/>
+                        <Setter Target="settingsbtn.Width" Value="55"/>
                         <Setter Target="settingsbtn.Height" Value="65"/>
                         <Setter Target="settingsbtn.FontSize" Value="24"/>
                         <!-- Back Button -->
-                        <Setter Target="backbtn.Width" Value="155"/>
+                        <Setter Target="backbtn.Width" Value="130"/>
                         <Setter Target="backbtn.Height" Value="65"/>
                         <Setter Target="backbtn.FontSize" Value="24"/>
                         <Setter Target="backbtn.Margin" Value="0,0,25,0"/>
                         <!-- Replace hamburger menu-->
                         <Setter Target="splitviewtogglebtn.Visibility" Value="Collapsed"/>
                         <!-- Forward button -->
-                        <Setter Target="forwardbtn.Width" Value="155"/>
+                        <Setter Target="forwardbtn.Width" Value="130"/>
                         <Setter Target="forwardbtn.Height" Value="65"/>
                         <Setter Target="forwardbtn.FontSize" Value="24"/>
                         <Setter Target="forwardbtn.Margin" Value="25,0,0,0"/>
                         <!-- Pane -->
-                        <Setter Target="mySplitView.CompactPaneLength" Value="60"/>
+                        <Setter Target="mySplitView.CompactPaneLength" Value="55"/>
                         <Setter Target="mySplitView.DisplayMode" Value="CompactInline"/>
                     </VisualState.Setters>
                 </VisualState>

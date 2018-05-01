@@ -15,6 +15,10 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Telerik.UI.Xaml.Controls.Grid;
+using Telerik.Core;
+using Telerik.Data;
+using Telerik.UI.Xaml;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -28,6 +32,22 @@ namespace Wikipedia_Fluent
         public MyTables()
         {
             this.InitializeComponent();
+
+            string[] strings = { "a", "b", "c" };
+            string[] string2 = { "d", "e", "f" };
+
+            RadDataGrid telerikgrid = new RadDataGrid();
+            DataGridTextColumn column = new DataGridTextColumn();
+            telerikgrid.AutoGenerateColumns = false;
+            column.PropertyName = "1";
+            column.Header = "COLUMN 1";
+            
+
+
+
+
+
+            Textblock1.Text = "\t\u2022 This is my string";
 
 
             //Extract out tables

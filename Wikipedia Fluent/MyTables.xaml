@@ -11,5 +11,7 @@
         <!--<StackPanel x:Name="mystackpanel">
             <Button Content="Submit" HorizontalAlignment="Center" x:Name="Submit" Click="submit_Click"/>
         </StackPanel>-->
+
+        <TextBlock Width="500" Height="500" Text="" Name="Textblock1"/>
     </Grid>
 </Page>

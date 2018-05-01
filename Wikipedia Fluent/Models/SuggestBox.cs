@@ -69,11 +69,7 @@ namespace Wikipedia_Fluent.Models
                 .OrderByDescending(c => c.title.StartsWith(query, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public string textsuggestion;
 
-        public override string ToString()
-        {
-            return string.Format("{0}", textsuggestion);
-        }
+
     }
 }
